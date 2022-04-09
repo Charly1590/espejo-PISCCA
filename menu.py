@@ -2,56 +2,31 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+import screeninfo 
+from moduloPosicionarImgs import Posicionamiento as put_img
+
+screen = screeninfo.get_monitors()[0] 
+cv2.namedWindow('image', cv2.WND_PROP_FULLSCREEN)
+cv2.moveWindow('image', screen.x - 1, screen.y - 1)
+cv2.setWindowProperty('image', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN) 
 
 img = cv2.imread('Fondo.jpg')
-img = cv2.resize(img,(1280,720))
+img = cv2.resize(img,(1360,768))
 img=cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
-def overlay_image_alpha(img, img_overlay, x, y, alpha_mask):
-    """Overlay `img_overlay` onto `img` at (x, y) and blend using `alpha_mask`.
 
-    `alpha_mask` must have same HxW as `img_overlay` and values in range [0, 1].
-    """
-    # Image ranges
-    y1, y2 = max(0, y), min(img.shape[0], y + img_overlay.shape[0])
-    x1, x2 = max(0, x), min(img.shape[1], x + img_overlay.shape[1])
+def click_event(event, x, y, flags, params):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(x, ' ', y, 'se preciono')
+        cv2.imshow('image', img)
 
-    # Overlay ranges
-    y1o, y2o = max(0, -y), min(img_overlay.shape[0], img.shape[0] - y)
-    x1o, x2o = max(0, -x), min(img_overlay.shape[1], img.shape[1] - x)
+if __name__=="__main__":
+    img_result=put_img.put_image_in_any_position(55, 130, img, "Personajes1.png", 500,600)
+    img_result=put_img.put_image_in_any_position(355, 400, img_result, "Personajes4.png", 350,350)
+    img_result=put_img.put_image_in_any_position(55, 650, img_result, "ImgMenu1.png", 660,270)
 
-    # Exit if nothing to do
-    if y1 >= y2 or x1 >= x2 or y1o >= y2o or x1o >= x2o:
-        return
+    cv2.imshow('image',img_result)
+    cv2.setMouseCallback('image', click_event)
 
-    # Blend overlay within the determined ranges
-    img_crop = img[y1:y2, x1:x2]
-    img_overlay_crop = img_overlay[y1o:y2o, x1o:x2o]
-    alpha = alpha_mask[y1o:y2o, x1o:x2o, np.newaxis]
-    alpha_inv = 1.0 - alpha
-
-    img_crop[:] = alpha * img_overlay_crop + alpha_inv * img_crop
-
-def put_image_in_any_position(x, y, img, name, height, weight):
-
-    img_per1 = np.array(Image.open(name))
-    img_per1=cv2.resize(img_per1,(height,weight))
-    alpha_mask_per1= img_per1[:, :, 3] / 255.0
-
-    img = np.array(img)
-
-    img_result = img[:, :, :3].copy()
-    img_overlay = img_per1[:, :, :3]
-
-    img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-
-    overlay_image_alpha(img_result, img_overlay, x, y, alpha_mask_per1)
-    
-    return img_result
-
-img_result=put_image_in_any_position(100, 100, img, "Personajes1.png", 400,500)
-img_result=put_image_in_any_position(200, 100, img, "Personajes1.png", 400,500)
-
-cv2.imshow('image',img_result)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

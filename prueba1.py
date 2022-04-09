@@ -13,13 +13,13 @@ import threading
 cap = cv2.VideoCapture(0)
 
 cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
-cap.set(cv2.CAP_PROP_FRAME_WIDTH,1240)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH,720)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
-cap.set(cv2.CAP_PROP_FPS,30)
+cap.set(cv2.CAP_PROP_FPS,60)
 
 
 with mp_holistic.Holistic(
-    model_complexity=0) as holistic:
+  model_complexity=0) as holistic:
 
   pTime = 0
   cTime = 0
@@ -60,27 +60,33 @@ with mp_holistic.Holistic(
 
     if results.left_hand_landmarks:
         myHand = results.left_hand_landmarks
+
+        mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+
         for id, lm in enumerate(myHand.landmark):
             # print(id, lm)
             h, w, c = image.shape
             cx, cy = int(lm.x * w), int(lm.y * h)
             # print(id, cx, cy)
             lmListL.append([id, cx, cy])
-            cv2.circle(image, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
-        mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+            cv2.circle(image, (cx, cy), 8, (255, 0, 255), cv2.FILLED)
+        
 
     if results.right_hand_landmarks:
         myHand = results.right_hand_landmarks
+
+        mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+
         for id, lm in enumerate(myHand.landmark):
             # print(id, lm)
             h, w, c = image.shape
             cx, cy = int(lm.x * w), int(lm.y * h)
             # print(id, cx, cy)
             lmListR.append([id, cx, cy])
-            cv2.circle(image, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
-        mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-    if len(lmListR) != 0: 
-      print(lmListR[0], lmListR[4], lmListR[8], lmListR[12], lmListR[16], lmListR[20])
+            cv2.circle(image, (cx, cy), 8, (0, 255, 0), cv2.FILLED)
+        
+    # if len(lmListR) != 0: 
+      # print(lmListR[0], lmListR[4], lmListR[8], lmListR[12], lmListR[16], lmListR[20])
 
 
     # mp_drawing.draw_landmarks(

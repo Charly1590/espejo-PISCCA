@@ -54,8 +54,8 @@ while(True):
     # Prepare inputs
     x, y = 100, 300
     img = np.array(frame)
-    img_overlay_rgba = np.array(Image.open("cepillo.png"))
-
+    img_overlay_rgba = np.array(Image.open("Boca.png"))
+    img_overlay_rgba = cv2.resize(img_overlay_rgba,(100,50))
 
 
     # Perform blending

@@ -40,14 +40,15 @@ def overlay_image_alpha(img, img_overlay, x, y, alpha_mask):
 
     img_crop[:] = alpha * img_overlay_crop + alpha_inv * img_crop
 
-
 img_boca = np.array(Image.open("Boca.png"))
-img_boca=cv2.resize(img_boca,(100,50))
+img_boca=cv2.rotate(img_boca, cv2.ROTATE_90_COUNTERCLOCKWISE)
+img_boca=cv2.resize(img_boca,(50,100))
 alpha_mask_boca= img_boca[:, :, 3] / 255.0
 
 img_cepillo = np.array(Image.open("cepillo1.png"))
+img_cepillo=cv2.rotate(img_cepillo, cv2.ROTATE_90_COUNTERCLOCKWISE)
 # imagimg_cepilloe = cv2.cvtColor(img_cepillo, cv2.COLOR_BGR2RGB)
-img_cepillo=cv2.resize(img_cepillo,(170,50))
+img_cepillo=cv2.resize(img_cepillo,(50,170))
 alpha_mask_cepillo = img_cepillo[:, :, 3] / 255.0
 
 # with mp_hands.Hands(
@@ -133,8 +134,8 @@ with mp_pose.Pose(
       r_mouth_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.MOUTH_RIGHT].y*image_height)
       x, y = r_mouth_position_x, r_mouth_position_y
 
-      x-=30
-      y-=10
+      x-=10
+      y-=60
       img = np.array(image)
       
       img_result = img[:, :, :3].copy()
@@ -147,7 +148,7 @@ with mp_pose.Pose(
       r_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].x*image_width)
       r_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].y*image_height)
       x, y = r_hand_position_x, r_hand_position_y
-      x-=70
+      y-=100
       img = np.array(img_result)
       
       img_result = img[:, :, :3].copy()
@@ -165,8 +166,10 @@ with mp_pose.Pose(
                     (255, 0, 255), 3)
                     
     try:
+      img_result=cv2.rotate(img_result, cv2.ROTATE_90_CLOCKWISE)
       cv2.imshow('MediaPipe Holistic', img_result)
     except:
+      image=cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
       cv2.imshow('MediaPipe Holistic', image)
 
     if cv2.waitKey(5) & 0xFF == 27:

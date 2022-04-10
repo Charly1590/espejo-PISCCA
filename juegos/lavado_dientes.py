@@ -3,7 +3,7 @@ import mediapipe as mp
 import time 
 import numpy as np
 from PIL import Image
-from moduloPosicionarImgs import Posicionamiento as put_img
+from modulos.moduloPosicionarImgs import Posicionamiento as put_img
 import screeninfo
 
 class lavado_dientes():
@@ -27,12 +27,12 @@ class lavado_dientes():
     cap.set(cv2.CAP_PROP_FPS,60)
 
 
-    img_boca = np.array(Image.open("Boca.png"))
+    img_boca = np.array(Image.open("recursos/autoc/cepilladodientes/Boca.png"))
     img_boca=cv2.rotate(img_boca, cv2.ROTATE_90_COUNTERCLOCKWISE)
     img_boca=cv2.resize(img_boca,(200,300))
     alpha_mask_boca= img_boca[:, :, 3] / 255.0
 
-    img_cepillo = np.array(Image.open("cepillo1.png"))
+    img_cepillo = np.array(Image.open("recursos/autoc/cepilladodientes/cepillo1.png"))
     img_cepillo=cv2.rotate(img_cepillo, cv2.ROTATE_90_COUNTERCLOCKWISE)
     # imagimg_cepilloe = cv2.cvtColor(img_cepillo, cv2.COLOR_BGR2RGB)
     img_cepillo=cv2.resize(img_cepillo,(50,200))

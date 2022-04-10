@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 
 class Posicionamiento():
+    
     def overlay_image_alpha(img, img_overlay, x, y, alpha_mask):
         """Overlay `img_overlay` onto `img` at (x, y) and blend using `alpha_mask`.
 
@@ -28,6 +29,18 @@ class Posicionamiento():
 
         img_crop[:] = alpha * img_overlay_crop + alpha_inv * img_crop
 
+    """
+        Esta funcion se utilizara para ubicar imagenes sobre otras imagenes
+        teniendo como parametros:
+
+        - la posicion x
+        - la posicion y
+        - la imagen a la que queremos sobreponer una imagen
+        - el nombre de la imagen que vamos a montar
+        - la altura de la imagen que vamos a montar
+        - el ancho de la imagen que vamos a montar
+        
+    """
     def put_image_in_any_position(x, y, img, name, height, weight):
 
         new_image = np.array(Image.open(name))
@@ -45,6 +58,16 @@ class Posicionamiento():
         
         return img_result
     
+    """
+        Esta funcion se utilizara para ubicar imagenes sobre el video
+        teniendo como parametros:
+
+        - la posicion x
+        - la posicion y
+        - el frame al que queremos montar la imagen
+        - la imagen que vamos a montar
+
+    """
     def put_elements_in_viedo(x, y, img, element):
 
         alpha_mask_new_image = element[:, :, 3] / 255.0

@@ -5,6 +5,7 @@ from PIL import Image
 import screeninfo 
 from modulos.moduloPosicionarImgs import Posicionamiento as put_img
 from juegos.lavado_dientes import lavado_dientes as act_dientes
+from juegos.lavadomanos import lavado_manos as act_manos
 
 
 screen = screeninfo.get_monitors()[0] 
@@ -23,7 +24,7 @@ def click_event_menu_inicial(event, x, y, flags, params):
 
 def click_event_menu_principal(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
-        print(x," ",y)
+        print(x," ",y, "principal")
         if (x>=170 and x<=620) and (y>=150 and y<=620):
             menu_autocuidado()
         if (x>=600 and x<=750) and (y>=30 and y<=140):
@@ -31,9 +32,11 @@ def click_event_menu_principal(event, x, y, flags, params):
 
 def click_event_menu_autocuidado(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
-        print(x," ",y)
+        print(x," ",y, "AUTOCUIDADO")
         if (x>=170 and x<=620) and (y>=150 and y<=620):
             act_dientes.actividad()
+        if (x>=170 and x<=620) and (y>=720 and y<=1190):
+            act_manos.actividad()
         if (x>=600 and x<=750) and (y>=30 and y<=140):
             menu_principal()
 

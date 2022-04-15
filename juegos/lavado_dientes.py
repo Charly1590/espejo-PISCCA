@@ -7,9 +7,7 @@ from modulos.moduloPosicionarImgs import Posicionamiento as put_img
 import screeninfo
 
 class lavado_dientes():
-
   
-
   def click_event(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(x," ",y, "sdahsjk")
@@ -119,6 +117,7 @@ class lavado_dientes():
             if (rhx>=480 and rhx<=516) and (rhy>=300 and rhy<=496):
               cepillo_mano=True
               cepillo_mano_derecha=True
+              
             if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
               cepillo_mano=True
               cepillo_mano_izquierda=True

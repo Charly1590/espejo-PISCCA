@@ -12,18 +12,18 @@ import random
 class lavado_manos():
   
   def actividad():
-    mp_drawing = mp.solutions.drawing_utils
+    #mp_drawing = mp.solutions.drawing_utils
 
     #Banderas globales
-    jabMano = False
+    jabMano=False
     espuma=False
     manoR=False
 
     #Definicion de Pantalla para Pantalla completa
     screen = screeninfo.get_monitors()[0]
-    cv2.namedWindow('MediaPipe Holistic', cv2.WND_PROP_FULLSCREEN)
-    cv2.moveWindow('MediaPipe Holistic', screen.x - 1, screen.y - 1)
-    cv2.setWindowProperty('MediaPipe Holistic', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN)
+    cv2.namedWindow('lavado_manos', cv2.WND_PROP_FULLSCREEN)
+    cv2.moveWindow('lavado_manos', screen.x - 1, screen.y - 1)
+    cv2.setWindowProperty('lavado_manos', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN)
 
 
 
@@ -34,7 +34,7 @@ class lavado_manos():
 
 
     #Captura de Video
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(2)
     cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,1360)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,768)
@@ -81,26 +81,8 @@ class lavado_manos():
 
 
 
-    #Funcion para detectar el jabon 
-    #Cuidado, aqui perdi el trazo de cual es izquierda o derecha por que el video esta invertido, pero la red neuronal no xd
-    def tomar_jabon(xl, yl, xr, yr ):
-      global jabMano
-      global manoR
-      global espuma
       
-      # 'Hitbox' del jabon 
-      if (xl>=1050 and xl<=1150) and (yl>=450  and yl<=550):
-        print('jabon der')
-        
-        jabMano=True
-        espuma=True
 
-      elif (xr>=1050 and xr<=1150) and (yr>=450  and yr<=550):
-        print('jabon izq')
-        
-        jabMano=True
-        manoR=True
-        espuma=True
 
     with mp_pose.Pose(
       
@@ -212,7 +194,22 @@ class lavado_manos():
           else:
             xj = 1050
             yj = 450 
-            tomar_jabon(xl, yl, xr, yr)
+            # 'Hitbox' del jabon 
+            if (xl>=1050 and xl<=1150) and (yl>=450  and yl<=550):
+              print('jabon der')
+              
+              jabMano=True
+              espuma=True
+
+            elif (xr>=1050 and xr<=1150) and (yr>=450  and yr<=550):
+              print('jabon izq')
+              
+              jabMano=True
+              manoR=True
+              espuma=True
+
+
+
               
           if(espuma):
             if (xl+150>=xr and xl-150<=xr) and (yl+150>=yr  and yl-150<=yr):
@@ -238,8 +235,8 @@ class lavado_manos():
           img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
           put_img.overlay_image_alpha(img_result, img_overlay, xj, yj, alpha_mask_jabon) 
 
-
-          mp_drawing.draw_landmarks(img_result, results2.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+          #Esta linea se encarga de dibujar el esqueleto sobre la persona 
+          #mp_drawing.draw_landmarks(img_result, results2.pose_landmarks, mp_pose.POSE_CONNECTIONS)
           
 
 
@@ -259,12 +256,13 @@ class lavado_manos():
         #Display De imagenes
         try:
           img_result=cv2.rotate(img_result, cv2.ROTATE_90_CLOCKWISE)
-          cv2.imshow('MediaPipe Holistic', img_result)
+          cv2.imshow('lavado_manos', img_result)
         except:
           image=cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
-          cv2.imshow('MediaPipe Holistic', image)
+          cv2.imshow('lavado_manos', image)
 
         #Tecla de salida ESC
         if cv2.waitKey(5) & 0xFF == 27:
+          cv2.destroyWindow('lavado_manos')
           break
     cap.release()

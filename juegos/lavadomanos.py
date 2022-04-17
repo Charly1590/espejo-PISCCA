@@ -19,6 +19,9 @@ class lavado_manos():
     espuma=False
     manoR=False
 
+    #Tiempo de lavado de manos
+    cont_bact= 0
+
     #Definicion de Pantalla para Pantalla completa
     screen = screeninfo.get_monitors()[0]
     cv2.namedWindow('lavado_manos', cv2.WND_PROP_FULLSCREEN)
@@ -34,7 +37,7 @@ class lavado_manos():
 
 
     #Captura de Video
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,1360)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,768)
@@ -81,6 +84,25 @@ class lavado_manos():
 
 
 
+    def dibujar_burbujas (n, img_result):
+
+      #img = np.array(img_result)
+      #img_result = img[:, :, :3].copy()
+      
+      while (n > 0):
+        img_overlay = img_burbuja[:, :, :3]
+        img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+        xbl = random.randint(xl-150, xl+150)
+        ybl = random.randint(yl-150, yl+150)
+        xbr = random.randint(xr-150, xr+150)
+        ybr = random.randint(yr-150, yr+150)
+        xb = int((xbl+xbr)/2)  
+        yb = int((ybl+ybr)/2) 
+
+        put_img.overlay_image_alpha(img_result, img_overlay, xb, yb, alpha_mask_burbuja)
+        n= n-1
+        
+        
       
 
 
@@ -96,7 +118,7 @@ class lavado_manos():
       while cap.isOpened():
 
         #Lectura y volteado de imagen
-        success, image = cap.read()
+        succes, image = cap.read()
         image=cv2.flip(image, 1)
 
 
@@ -122,6 +144,11 @@ class lavado_manos():
         #Guardado de puntos de interes
         if results2.pose_landmarks:
 
+
+          #Guardamos el Frame actual y dibujamos sobre la imagen
+          img = np.array(image)
+          img_result = img[:, :, :3].copy()
+
           #Guardado calculado de la posicion central Mano Derecha
           l_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].x*image_width)
           l_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].y*image_height)
@@ -142,17 +169,7 @@ class lavado_manos():
           xl=int(xl)-100
           yl=int(yl)
 
-          #Guardamos el Frame actual y dibujamos sobre la imagen
-          img = np.array(image)
-          img_result = img[:, :, :3].copy()
-          img_overlay = img_mano_izquierda[:, :, :3]
-          img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-          #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-          put_img.overlay_image_alpha(img_result, img_overlay, xl, yl, alpha_mask_mano_izquierda)
-
-
-
-        #Guardado calculado de la posicion central Mano Derecha
+          #Guardado calculado de la posicion central Mano Derecha
           r_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].x*image_width)
           r_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].y*image_height)
           xwr, ywr =  r_position_x, r_position_y
@@ -173,11 +190,24 @@ class lavado_manos():
           yr=int(yr)
           
           #Dibujado
-          img = np.array(img_result)
-          #img_result = img[:, :, :3].copy()
-          img_overlay = img_mano_derecha[:, :, :3]
-          img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-          put_img.overlay_image_alpha(img_result, img_overlay, xr, yr, alpha_mask_mano_derecha)
+
+
+          #Tiempo maximo de las baterias
+          if (cont_bact < 50):
+            img_overlay = img_mano_izquierda[:, :, :3]
+            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+            #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
+            put_img.overlay_image_alpha(img_result, img_overlay, xl, yl, alpha_mask_mano_izquierda)
+
+
+
+            #img = np.array(img_result)
+            #img_result = img[:, :, :3].copy()
+            img_overlay = img_mano_derecha[:, :, :3]
+            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+            put_img.overlay_image_alpha(img_result, img_overlay, xr, yr, alpha_mask_mano_derecha)
+
+
 
 
           #Ajustes de la posicion del jabon y funcion
@@ -195,13 +225,13 @@ class lavado_manos():
             xj = 1050
             yj = 450 
             # 'Hitbox' del jabon 
-            if (xl>=1050 and xl<=1150) and (yl>=450  and yl<=550):
+            if (xl>=1040 and xl<=1160) and (yl>=440  and yl<=550):
               print('jabon der')
               
               jabMano=True
               espuma=True
 
-            elif (xr>=1050 and xr<=1150) and (yr>=450  and yr<=550):
+            elif (xr>=1040 and xr<=1160) and (yr>=440  and yr<=560):
               print('jabon izq')
               
               jabMano=True
@@ -212,24 +242,15 @@ class lavado_manos():
 
               
           if(espuma):
-            if (xl+150>=xr and xl-150<=xr) and (yl+150>=yr  and yl-150<=yr):
-              img = np.array(img_result)
-              #img_result = img[:, :, :3].copy()
-              img_overlay = img_burbuja[:, :, :3]
-              img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              xbl = random.randint(xl-150, xl+150)
-              ybl = random.randint(yl-150, yl+150)
-              xbr = random.randint(xr-150, xr+150)
-              ybr = random.randint(yr-150, yr+150)
-              xb = int((xbl+xbr)/2)  
-              yb = int((ybl+ybr)/2) 
-
-              put_img.overlay_image_alpha(img_result, img_overlay, xb, yb, alpha_mask_burbuja)
+            if (xl+160>=xr and xl-140<=xr) and (yl+160>=yr  and yl-140<=yr):
+              dibujar_burbujas(12,img_result)
+              #Registro del tiempo para que desaparescan las bacterias
+              cont_bact = cont_bact +1
 
 
 
           #Dibujado
-          img = np.array(img_result)
+          #img = np.array(img_result)
           #img_result = img[:, :, :3].copy()
           img_overlay = img_jabon[:, :, :3]
           img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)

@@ -8,6 +8,10 @@ from modulos.moduloPosicionarImgs import Posicionamiento as put_img
 import screeninfo
 import random
 import math
+import threading
+
+import multiprocessing
+from playsound import playsound
 
 class lavado_dientes():
   
@@ -21,7 +25,7 @@ class lavado_dientes():
           return_action=True
 
   def dibujar_burbujas (n, img_result, mx, my):
-      img_burbuja = np.array(Image.open("recursos/autoc/lavmanos/burbuja.png"))
+      img_burbuja = np.array(Image.open("recursos/autoc/cepilladodientes/espuma.png"))
       img_burbuja=cv2.rotate(img_burbuja, cv2.ROTATE_90_COUNTERCLOCKWISE)
       img_burbuja=cv2.resize(img_burbuja,(30 ,40 ))
       alpha_mask_burbuja= img_burbuja[:, :, 3] / 255.0
@@ -53,6 +57,12 @@ class lavado_dientes():
         n= n-1
       
       return img_result
+  
+  def checkSound():
+    playsound('recursos/autoc/cepilladodientes/check.mp3')
+  
+  def brushingSound():
+    playsound('recursos/autoc/cepilladodientes/brushing.mp3')
 
   def actividad():
     
@@ -63,7 +73,9 @@ class lavado_dientes():
     pasta_mano_derecha=1
     pasta_mano_izquierda=1
     bacteria=0
-
+    soundBrushin=True
+    soundCheck=True
+    vectSoundsThread=[]
     """
       Se pondra a la ventana en pantalla completa para evitar
       los bordes de la interfaz del sistema
@@ -148,6 +160,8 @@ class lavado_dientes():
 
     global return_action
 
+    
+
     return_action=False
 
     zhand=0
@@ -156,6 +170,8 @@ class lavado_dientes():
     my=0
     rhx=0
     rhy=0
+
+    
     
     """
       Se carga la red neuronal con un modelo de complegidad
@@ -173,6 +189,8 @@ class lavado_dientes():
       model_complexity=0) as pose:
       while cap.isOpened():
 
+        checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
+        
         success, image = cap.read()
 
         image=cv2.flip(image, 1)
@@ -225,33 +243,40 @@ class lavado_dientes():
             if (rhx>=480 and rhx<=516) and (rhy>=300 and rhy<=496):
               cepillo_mano=True
               cepillo_mano_derecha=True
+              checkSound.start()
               
             if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
               cepillo_mano=True
               cepillo_mano_izquierda=True
-
+              checkSound.start()
             img_result=put_img.put_elements_in_viedo(300,300,img_result,img_cepillo)
           
-          if bacteria<=15:
+          if bacteria<=25:
             img_result=put_img.put_elements_in_viedo(mx+10,my+10,img_result,img_bacteria1)  
             img_result2=img_result
-          if bacteria<=25:
+          if bacteria<=35:
             img_result=put_img.put_elements_in_viedo(mx+12,my+20,img_result,img_bacteria2)  
             img_result2=img_result
-          if bacteria<=35:
+          if bacteria<=45:
             img_result=put_img.put_elements_in_viedo(mx+7,my+30,img_result,img_bacteria3)  
             img_result2=img_result
-          if bacteria<=45:
+          if bacteria<=55:
             img_result=put_img.put_elements_in_viedo(mx+10,my+40,img_result,img_bacteria4)  
             img_result2=img_result
-          if bacteria<=55:
+          if bacteria<=65:
             img_result=put_img.put_elements_in_viedo(mx+7,my+50,img_result,img_bacteria5)  
             img_result2=img_result
-          if bacteria>55:
+          if bacteria>75:
+            if vectSoundsThread[0].is_alive():
+              vectSoundsThread[0].terminate()
+              soundBrushin=True
+            if soundCheck:
+              checkSound.start()
+              soundCheck=False
             img_result=lavado_dientes.dibujar_brillos(3,img_result,mx,my)
             img_result2=img_result
 
-          if bacteria<=55:  
+          if bacteria<=75:  
             if cepillo_mano_derecha:
               r_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].x*image_width)
               r_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].y*image_height)
@@ -278,6 +303,7 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
                 if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
                   pasta_mano_izquierda=2
+                  checkSound.start()
               else:
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result,img_pasta_left)
               
@@ -288,14 +314,29 @@ class lavado_dientes():
                 #           (255, 0, 255), 3)
                 if distance_hands>=85 and distance_hands<=200:
                   pasta_mano_izquierda = 3
+                  checkSound.start()
 
               if pasta_mano_izquierda == 3:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result2,img_cepilloPasta_right)
                 diferencia_en_x=mx-rhx
-                if distance_mouth_hand >= 80 and distance_mouth_hand <= 200 and diferencia_en_x>=-25 and diferencia_en_x<=5:
-                  bacteria+=1
-                  img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)
-                          
+                try:
+                  if distance_mouth_hand >= 80 and distance_mouth_hand <= 200 and diferencia_en_x>=-25 and diferencia_en_x<=5:
+                    bacteria+=1
+                    img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)
+                    if soundBrushin:
+                      brushingSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/brushing.mp3",))
+                      brushingSound.start()
+                      vectSoundsThread.append(brushingSound)
+                      soundBrushin=False
+                  elif vectSoundsThread[0].is_alive():
+                    vectSoundsThread[0].terminate()
+                    vectSoundsThread=[]
+                    soundBrushin=True
+                except:
+                  img_result=img_result
+                
+
+                   
             if cepillo_mano_izquierda:
               l_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].x*image_width)
               l_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].y*image_height)
@@ -320,6 +361,7 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
                 if (rhx>=380 and rhx<=616) and (rhy>=200 and rhy<=596):
                   pasta_mano_derecha=2
+                  checkSound.start()
               else:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result,img_pasta_right)
           
@@ -330,6 +372,7 @@ class lavado_dientes():
                 #           (255, 0, 255), 3)
                 if distance_hands>=85 and distance_hands<=200:
                   pasta_mano_derecha = 3
+                  checkSound.start()
 
               if pasta_mano_derecha == 3:
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result2,img_cepilloPasta_left)

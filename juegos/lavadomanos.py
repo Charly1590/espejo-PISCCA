@@ -41,8 +41,6 @@ class lavado_manos():
     cv2.setWindowProperty('lavado_manos', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN)
 
 
-
-
     #Red Neuronal
     mp_pose = mp.solutions.pose
 
@@ -406,8 +404,6 @@ class lavado_manos():
             espuma=False
 
           
-
-
 
 
           #Ajustes de la posicion del jabon y funcion

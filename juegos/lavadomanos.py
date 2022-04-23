@@ -29,8 +29,6 @@ class lavado_manos():
     cv2.setWindowProperty('lavado_manos', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN)
 
 
-
-
     #Red Neuronal
     mp_pose = mp.solutions.pose
 
@@ -199,15 +197,11 @@ class lavado_manos():
             #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
             put_img.overlay_image_alpha(img_result, img_overlay, xl, yl, alpha_mask_mano_izquierda)
 
-
-
             #img = np.array(img_result)
             #img_result = img[:, :, :3].copy()
             img_overlay = img_mano_derecha[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             put_img.overlay_image_alpha(img_result, img_overlay, xr, yr, alpha_mask_mano_derecha)
-
-
 
 
           #Ajustes de la posicion del jabon y funcion

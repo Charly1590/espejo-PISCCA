@@ -1,3 +1,4 @@
+from ast import If
 import cv2
 import mediapipe as mp
 import time 
@@ -6,15 +7,14 @@ from PIL import Image
 from modulos.moduloPosicionarImgs import Posicionamiento as put_img
 import screeninfo
 import random
-
+import multiprocessing
+from playsound import playsound
 
 class lavado_manos():
   
   def click_event(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(x," ",y, "pos")
-
-
 
   def actividad():
     #mp_drawing = mp.solutions.drawing_utils
@@ -29,7 +29,8 @@ class lavado_manos():
     jabon=True
     brilloder=False
     brilloizq=False
-
+    ctrlchek=True
+    ctrlchek2=True
 
     #Tiempo de lavado de manos
     cont_bact= 0
@@ -47,7 +48,7 @@ class lavado_manos():
 
 
     #Captura de Video
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(2)
     cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,1360)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,768)
@@ -225,6 +226,9 @@ class lavado_manos():
 
       while cap.isOpened():
 
+        #Sonido Check
+        checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
+
         #Lectura y volteado de imagen
         succes, image = cap.read()
         image=cv2.flip(image, 1)
@@ -398,6 +402,9 @@ class lavado_manos():
             #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
             put_img.overlay_image_alpha(img_result, img_overlay, xr-35, yr+35, alpha_mask_espuma)
 
+            if sucio:
+              checkSound.start()
+
             aguader=False
             aguaizq=False
             sucio=False
@@ -426,6 +433,7 @@ class lavado_manos():
               
               jabMano=True
               espuma=True
+              checkSound.start()
 
             elif ((xr>=xj and xr<=xj+50) and (yr>=yj  and yr<=xj+50)& aguader & aguaizq):
               print('jabon izq')
@@ -433,6 +441,7 @@ class lavado_manos():
               jabMano=True
               manoR=True
               espuma=True
+              checkSound.start()
 
 
           if(espuma):
@@ -445,29 +454,45 @@ class lavado_manos():
 
 
           #Agua control
-          if (xl>=900 and xl<=1200) and (yl>=550  and yl<=670):
+          if (xl>=900 and xl<=1300) and (yl>=500  and yl<=670):
             aguader=True
 
-          if (xr>=900 and xr<=1200) and (yr>=550  and yr<=670):
+          if (xr>=900 and xr<=1300) and (yr>=500  and yr<=670):
             aguaizq=True
+            
+
+          #Check mojado de manos
+          if aguader and aguaizq and ctrlchek and ctrlchek2:
+            checkSound.start()
+            ctrlchek=False
+
+          #Check enguagado de manos
+          if aguader== False and aguaizq==False and ctrlchek==False and ctrlchek2==False:
+            checkSound.start()
+            ctrlchek=True
 
 
           #Toalla control y brillo
-          if (xl>=900 and xl<=1200) and (yl>=0  and yl<=100):
+          if (xl>=900 and xl<=1200) and (yl>=0  and yl<=100) and jabon==False:
             aguader=False
             if sucio == False:
               brilloder = True
 
-          if (xr>=900 and xr<=1200) and (yr>=10  and yr<=100):
+          if (xr>=900 and xr<=1200) and (yr>=10  and yr<=100) and jabon==False:
             aguaizq=False
             if sucio == False:
               brilloizq = True
 
 
           
-          if (xr>=900 and xr<=1200) and (yr>=550  and yr<=670) and (xl>=900 and xl<=1200) and (yl>=550  and yl<=670) and sucio ==False:
+          #Control del lavado de manos 
+          if (xr>=900 and xr<=1300) and (yr>=500  and yr<=670) and (xl>=900 and xl<=1300) and (yl>=500  and yl<=670) and sucio ==False:
             cont_bact = cont_bact -1
             jabon=False
+            if cont_bact < 5 and ctrlchek2:
+              checkSound.start()
+              ctrlchek2=False
+
 
 
               

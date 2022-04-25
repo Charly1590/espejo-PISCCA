@@ -380,7 +380,19 @@ class lavado_dientes():
                 if distance_mouth_hand >= 20 and distance_mouth_hand <= 150 and diferencia_en_x>=-45 and diferencia_en_x<= 25:
                   bacteria+=1
                   img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)
-          
+                try:
+                  if soundBrushin:
+                      brushingSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/brushing.mp3",))
+                      brushingSound.start()
+                      vectSoundsThread.append(brushingSound)
+                      soundBrushin=False
+                  elif vectSoundsThread[0].is_alive():
+                    vectSoundsThread[0].terminate()
+                    vectSoundsThread=[]
+                    soundBrushin=True
+                except:
+                  img_result=img_result
+                
         # end = time.time()
         # totalTime = end-start
         # fps = 1 / totalTime

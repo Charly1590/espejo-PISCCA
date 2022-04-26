@@ -27,6 +27,8 @@ def click_event_menu_principal(event, x, y, flags, params):
         print(x," ",y, "principal")
         if (x>=170 and x<=620) and (y>=150 and y<=620):
             menu_autocuidado()
+        if (x>=170 and x<=620) and (y>=720 and y<=1190):
+            menu_seleccion_genero()
         if (x>=600 and x<=750) and (y>=30 and y<=140):
             menu_inicial()
 
@@ -59,6 +61,15 @@ def menu_principal():
 def menu_autocuidado():
     img_result=put_img.put_image_in_any_position(150, 130, img, "recursos/menu/btnimg3.png", 500,500)
     img_result=put_img.put_image_in_any_position(150, 700, img_result, "recursos/menu/btnimg7.png", 500,500)
+    img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/return.png", 150,150)
+    cv2.imshow('image',img_result)
+    cv2.setMouseCallback('image', click_event_menu_autocuidado)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def menu_seleccion_genero():
+    img_result=put_img.put_image_in_any_position(150, 130, img, "recursos/menu/niña.png", 500,500)
+    img_result=put_img.put_image_in_any_position(150, 700, img_result, "recursos/menu/niño.png", 500,500)
     img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/return.png", 150,150)
     cv2.imshow('image',img_result)
     cv2.setMouseCallback('image', click_event_menu_autocuidado)

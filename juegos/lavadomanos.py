@@ -11,15 +11,22 @@ import multiprocessing
 from playsound import playsound
 
 class lavado_manos():
+
+  return_action=False
   
   def click_event(event, x, y, flags, params):
+    global return_action
     if event == cv2.EVENT_LBUTTONDOWN:
-        print(x," ",y, "pos")
+        print(x," ",y, "sdahsjk")
+        if (x>=540 and x<=720) and (y>=30 and y<=150):
+          return_action=True
 
   def actividad():
     #mp_drawing = mp.solutions.drawing_utils
 
     #Banderas globales
+    global return_action
+    return_action=False
     jabMano=False
     espuma=False
     manoR=False
@@ -167,6 +174,11 @@ class lavado_manos():
     img_brillo=cv2.resize(img_brillo,(50,100))
     #Creacion de Alpha
     alpha_mask_brillo = img_brillo[:, :, 3] / 255.0
+
+    #Atras
+    img_return = np.array(Image.open("recursos/menu/return.png"))
+    img_return=cv2.rotate(img_return, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    img_return=cv2.resize(img_return,(150,150))
 
 
     
@@ -425,7 +437,7 @@ class lavado_manos():
               yj = yl
 
           else:
-            xj = 250
+            xj = 350
             yj = 250 
             # 'Hitbox' del jabon 
             if ((xl>=xj and xl<=xj+50) and (yl>=yj  and yl<=xj+50) & aguader & aguaizq):
@@ -454,10 +466,10 @@ class lavado_manos():
 
 
           #Agua control
-          if (xl>=900 and xl<=1300) and (yl>=500  and yl<=670):
+          if (xl>=800 and xl<=1300) and (yl>=500  and yl<=670):
             aguader=True
 
-          if (xr>=900 and xr<=1300) and (yr>=500  and yr<=670):
+          if (xr>=800 and xr<=1300) and (yr>=500  and yr<=670):
             aguaizq=True
             
 
@@ -473,20 +485,20 @@ class lavado_manos():
 
 
           #Toalla control y brillo
-          if (xl>=900 and xl<=1200) and (yl>=0  and yl<=100) and jabon==False:
+          if (xl>=700 and xl<=1300) and (yl>=0  and yl<=250) and jabon==False:
             aguader=False
             if sucio == False:
               brilloder = True
 
-          if (xr>=900 and xr<=1200) and (yr>=10  and yr<=100) and jabon==False:
+          if (xr>=700 and xr<=1300) and (yr>=0  and yr<=250) and jabon==False:
             aguaizq=False
             if sucio == False:
               brilloizq = True
 
 
           
-          #Control del lavado de manos 
-          if (xr>=900 and xr<=1300) and (yr>=500  and yr<=670) and (xl>=900 and xl<=1300) and (yl>=500  and yl<=670) and sucio ==False:
+          #Control del lavado de manos    
+          if (xr>=900 and xr<=1000) and (yr>=400  and yr<=770) and (xl>=900 and xl<=1000) and (yl>=400  and yl<=770) and sucio ==False:
             cont_bact = cont_bact -1
             jabon=False
             if cont_bact < 5 and ctrlchek2:
@@ -542,7 +554,7 @@ class lavado_manos():
           #Dibujado y pocicionado del grifo 
           img_overlay = img_grifo[:, :, :3]
           img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-          put_img.overlay_image_alpha(img_result, img_overlay, 1000, 550, alpha_mask_grifo) 
+          put_img.overlay_image_alpha(img_result, img_overlay, 800, 550, alpha_mask_grifo) 
 
           #Dibujado y pocicionado del espuma
           #img_overlay = img_espuma[:, :, :3]
@@ -552,7 +564,7 @@ class lavado_manos():
           #Dibujado y pocicionado de la Toalla
           img_overlay = img_toalla[:, :, :3]
           img_overlay = cv2.cvtColor(img_toalla, cv2.COLOR_BGR2RGB)
-          put_img.overlay_image_alpha(img_result, img_overlay, 1000, 0, alpha_mask_toalla)
+          put_img.overlay_image_alpha(img_result, img_overlay, 800, 0, alpha_mask_toalla)
 
 
 
@@ -574,22 +586,28 @@ class lavado_manos():
         fps = 1 / totalTime
 
         #Dibujado de FPS
-        cv2.putText(img_result, str(int(fps)), (20, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
-                        (255, 0, 255), 3)
+        # cv2.putText(img_result, str(int(fps)), (20, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
+        #                 (255, 0, 255), 3)
                         
 
         #Display De imagenes
         try:
+          img_result=put_img.put_elements_in_viedo(20,20,img_result,img_return)
           img_result=cv2.rotate(img_result, cv2.ROTATE_90_CLOCKWISE)
           cv2.imshow('lavado_manos', img_result)
           cv2.setMouseCallback('lavado_manos', lavado_manos.click_event)
         except:
+          image=put_img.put_elements_in_viedo(20,20,image,img_return)
           image=cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
           cv2.imshow('lavado_manos', image)
           cv2.setMouseCallback('lavado_manos', lavado_manos.click_event)
 
         #Tecla de salida ESC
-        if cv2.waitKey(5) & 0xFF == 27:
-          cv2.destroyWindow('lavado_manos')
-          break
+        try:
+          if return_action or (cv2.waitKey(5) & 0xFF == 27):
+            cv2.destroyWindow('lavado_manos')
+            break
+        except Exception as e:
+          print(e)
+
     cap.release()

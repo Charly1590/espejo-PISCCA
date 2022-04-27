@@ -258,19 +258,19 @@ class lavado_dientes():
           if bacteria<=75:
             img_result=put_img.put_elements_in_viedo(mx+10,my+10,img_result,img_bacteria1)  
             img_result2=img_result
-          if bacteria<=85:
+          if bacteria<=105:
             img_result=put_img.put_elements_in_viedo(mx+12,my+20,img_result,img_bacteria2)  
             img_result2=img_result
-          if bacteria<=95:
+          if bacteria<=125:
             img_result=put_img.put_elements_in_viedo(mx+7,my+30,img_result,img_bacteria3)  
             img_result2=img_result
-          if bacteria<=105:
+          if bacteria<=160:
             img_result=put_img.put_elements_in_viedo(mx+10,my+40,img_result,img_bacteria4)  
             img_result2=img_result
-          if bacteria<=115:
+          if bacteria<=185:
             img_result=put_img.put_elements_in_viedo(mx+7,my+50,img_result,img_bacteria5)  
             img_result2=img_result
-          if bacteria>115:
+          if bacteria>185:
             if vectSoundsThread[0].is_alive():
               vectSoundsThread[0].terminate()
               soundBrushin=True
@@ -281,14 +281,14 @@ class lavado_dientes():
             img_result=lavado_dientes.dibujar_brillos(3,img_result,mx,my)
             img_result2=img_result
 
-          if bacteria<=115:  
+          if bacteria<=185:  
             if cepillo_mano_derecha:
               r_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].x*image_width)
               r_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].y*image_height)
               zhand=round(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].z,2)
               rhx, rhy = r_hand_position_x, r_hand_position_y
-              rhy-=90
-              rhy+=60
+              rhx-=30
+              rhy-=80
               img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result,img_cepillo_right)
               # cv2.putText(img_result, str(zhand), (rhx, rhy), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
               #             (0, 255, 0), 3)
@@ -301,7 +301,7 @@ class lavado_dientes():
               l_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].x*image_width)
               l_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].y*image_height)
               lhx, lhy = l_hand_position_x, l_hand_position_y
-              lhy-=100
+              lhx-=100
               lhy-=60
 
               if pasta_mano_izquierda == 1:
@@ -333,7 +333,7 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result2,img_cepilloPasta_right)
                 diferencia_en_x=mx-rhx
                 try:
-                  if distance_mouth_hand >= 80 and distance_mouth_hand <= 200 and diferencia_en_x>=-25 and diferencia_en_x<=5:
+                  if distance_mouth_hand >= 80 and distance_mouth_hand <= 200 and diferencia_en_x>=-105 and diferencia_en_x<=105:
                     bacteria+=1
                     img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)
                     if soundBrushin:
@@ -355,8 +355,8 @@ class lavado_dientes():
               l_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].x*image_width)
               l_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].y*image_height)
               lhx, lhy = l_hand_position_x, l_hand_position_y
-              lhy-=100
-              lhy-=60
+              lhx-=30
+              lhy-=80
               img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result,img_cepillo_left)
             
               distance_mouth_hand = round(math.sqrt((mx-lhx)**2+(my-lhy)**2),2)   
@@ -368,8 +368,8 @@ class lavado_dientes():
               r_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].y*image_height)
               zhand=round(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].z,2)
               rhx, rhy = r_hand_position_x, r_hand_position_y
-              rhy-=90
-              rhy+=60
+              rhx-=100
+              rhy-=60
 
               if pasta_mano_derecha == 1:
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
@@ -400,7 +400,7 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result2,img_cepilloPasta_left)
                 diferencia_en_x=mx-lhx
                 try:
-                  if distance_mouth_hand >= 20 and distance_mouth_hand <= 150 and diferencia_en_x>=-45 and diferencia_en_x<= 25:
+                  if distance_mouth_hand >= 5 and distance_mouth_hand <= 200 and diferencia_en_x>=-105 and diferencia_en_x<=105:
                     bacteria+=1
                     img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)
 

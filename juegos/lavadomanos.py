@@ -1,4 +1,3 @@
-from ast import If
 import cv2
 import mediapipe as mp
 import time 
@@ -27,17 +26,23 @@ class lavado_manos():
     #Banderas globales
     global return_action
     return_action=False
+
     jabMano=False
     espuma=False
     manoR=False
     aguader=False
     aguaizq=False
     sucio=True
-    jabon=True
     brilloder=False
     brilloizq=False
-    ctrlchek=True
-    ctrlchek2=True
+    
+
+    paso1=True
+    paso2=False
+    paso3=False
+    paso4=False
+
+
 
     #Tiempo de lavado de manos
     cont_bact= 0
@@ -55,7 +60,7 @@ class lavado_manos():
 
 
     #Captura de Video
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(2)
     cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,1360)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,768)
@@ -181,7 +186,52 @@ class lavado_manos():
     img_return=cv2.resize(img_return,(150,150))
 
 
-    
+    def dibujar_brilloizq (n, img_result):
+      while (n > 0):
+        xbl = random.randint(xr-75, xr+75)
+        ybl = random.randint(yr-75, yr+75)
+        xb = int(xbl)  
+        yb = int(ybl)
+
+        img_overlay = img_brillo[:, :, :3]
+        img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+        put_img.overlay_image_alpha(img_result, img_overlay, xb, yb, alpha_mask_brillo)
+
+        n= n-1
+
+    def dibujar_brilloder (n, img_result):
+      while (n > 0):
+        xbr = random.randint(xl-75, xl+75)
+        ybr = random.randint(yl-75, yl+75)
+        xb = int(xbr)  
+        yb = int(ybr)
+
+        img_overlay = img_brillo[:, :, :3]
+        img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+        put_img.overlay_image_alpha(img_result, img_overlay, xb, yb, alpha_mask_brillo)
+
+        n= n-1
+
+    def dibujar_gotas (n, img_result):
+
+      #img = np.array(img_result)
+      #img_result = img[:, :, :3].copy()
+      
+      while (n > 0):
+        
+        xbl = random.randint(xl-150, xl+150)
+        ybl = random.randint(yl-150, yl+150)
+        xbr = random.randint(xr-150, xr+150)
+        ybr = random.randint(yr-150, yr+150)
+        xb = int((xbl+xbr)/2)  
+        yb = int((ybl+ybr)/2) 
+
+        
+        img_overlay = img_gota[:, :, :3]
+        img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+        put_img.overlay_image_alpha(img_result, img_overlay, xb, yb, alpha_mask_gota)
+
+        n= n-1
 
 
 
@@ -247,7 +297,7 @@ class lavado_manos():
 
 
         #Contador FPS
-        start = time.time()
+        #start = time.time()
 
 
         #Convercion de colores de BGR a RGB
@@ -290,8 +340,9 @@ class lavado_manos():
           yl = (ywl + yil + ypl) / 3
 
           #Reajuste de valores y la posicion 
-          xl=int(xl)-100
-          yl=int(yl)-50
+          xl=int(xl)
+          yl=int(yl)
+          
 
           #Guardado calculado de la posicion central Mano Derecha
           r_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].x*image_width)
@@ -310,109 +361,115 @@ class lavado_manos():
           yr = (ywr + yir + ypr) / 3
 
           #Reajuste de valores y la posicion 
-          xr=int(xr)-100
-          yr=int(yr)-50
+          xr=int(xr)
+          yr=int(yr)
           
-          #Dibujado
 
+
+          #Dibujado
+          xld=xl-100
+          yld=yl-50
+
+          xrd=xr-100
+          yrd=yr-50
 
           #Tiempo maximo de las baterias
-          if (cont_bact < 5):
+          if (cont_bact < 8):
             if sucio:
               img_overlay = img_bacteria4[:, :, :3]
               img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
               #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-              put_img.overlay_image_alpha(img_result, img_overlay, xl, yl, alpha_mask_bacteria4)
+              put_img.overlay_image_alpha(img_result, img_overlay, xld, yld, alpha_mask_bacteria4)
           else:
             img_overlay = img_espuma[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xl, yl, alpha_mask_espuma)
+            put_img.overlay_image_alpha(img_result, img_overlay, xld, yld, alpha_mask_espuma)
 
 
-          if (cont_bact < 10):
+          if (cont_bact < 16):
             if sucio:
               img_overlay = img_bacteria4[:, :, :3]
               img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              put_img.overlay_image_alpha(img_result, img_overlay, xr+45, yr+45, alpha_mask_bacteria4)
+              put_img.overlay_image_alpha(img_result, img_overlay, xrd+45, yrd+45, alpha_mask_bacteria4)
           else:
             img_overlay = img_espuma[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xr+45, yr+45, alpha_mask_espuma)
+            put_img.overlay_image_alpha(img_result, img_overlay, xrd+45, yrd+45, alpha_mask_espuma)
 
           
-          if (cont_bact < 15):
+          if (cont_bact < 24):
             if sucio:
               img_overlay = img_bacteria5[:, :, :3]
               img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              put_img.overlay_image_alpha(img_result, img_overlay, xl+45, yl+45, alpha_mask_bacteria5)
+              put_img.overlay_image_alpha(img_result, img_overlay, xld+45, yld+45, alpha_mask_bacteria5)
           else:
             img_overlay = img_espuma[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xl+45, yl+45, alpha_mask_espuma)
+            put_img.overlay_image_alpha(img_result, img_overlay, xld+45, yld+45, alpha_mask_espuma)
 
 
 
-          if (cont_bact < 20):
+          if (cont_bact < 32):
             if sucio:
               img_overlay = img_bacteria6[:, :, :3]
               img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              put_img.overlay_image_alpha(img_result, img_overlay, xr-45, yr-45, alpha_mask_bacteria6)
+              put_img.overlay_image_alpha(img_result, img_overlay, xrd-45, yrd-45, alpha_mask_bacteria6)
           else:
             img_overlay = img_espuma[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xr-45, yr-45, alpha_mask_espuma)
-
-
-          if (cont_bact < 25):
-            if sucio:
-              img_overlay = img_bacteria7[:, :, :3]
-              img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              put_img.overlay_image_alpha(img_result, img_overlay, xl-45, yl-45, alpha_mask_bacteria7)
-          else:
-            img_overlay = img_espuma[:, :, :3]
-            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xl-45, yl-45, alpha_mask_espuma)
-
-
-          if (cont_bact < 30):
-            if sucio:
-              img_overlay = img_bacteria8[:, :, :3]
-              img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              put_img.overlay_image_alpha(img_result, img_overlay, xr+45, yr-45, alpha_mask_bacteria8)
-          else:
-            img_overlay = img_espuma[:, :, :3]
-            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xr+45, yr-45, alpha_mask_espuma)
-
-
-          if (cont_bact < 35):
-            if sucio:
-              img_overlay = img_bacteria11[:, :, :3]
-              img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              put_img.overlay_image_alpha(img_result, img_overlay, xl+35, yl-35, alpha_mask_bacteria11)
-          else:
-            img_overlay = img_espuma[:, :, :3]
-            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xl+35, yl-35, alpha_mask_espuma)
+            put_img.overlay_image_alpha(img_result, img_overlay, xrd-45, yrd-45, alpha_mask_espuma)
 
 
           if (cont_bact < 40):
             if sucio:
-              img_overlay = img_bacteria12[:, :, :3]
+              img_overlay = img_bacteria7[:, :, :3]
               img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-              put_img.overlay_image_alpha(img_result, img_overlay, xr-35, yr+35, alpha_mask_bacteria12)
+              put_img.overlay_image_alpha(img_result, img_overlay, xld-45, yld-45, alpha_mask_bacteria7)
           else:
             img_overlay = img_espuma[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
-            put_img.overlay_image_alpha(img_result, img_overlay, xr-35, yr+35, alpha_mask_espuma)
+            put_img.overlay_image_alpha(img_result, img_overlay, xld-45, yld-45, alpha_mask_espuma)
+
+
+          if (cont_bact < 48):
+            if sucio:
+              img_overlay = img_bacteria8[:, :, :3]
+              img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+              put_img.overlay_image_alpha(img_result, img_overlay, xrd+45, yrd-45, alpha_mask_bacteria8)
+          else:
+            img_overlay = img_espuma[:, :, :3]
+            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+            #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
+            put_img.overlay_image_alpha(img_result, img_overlay, xrd+45, yrd-45, alpha_mask_espuma)
+
+
+          if (cont_bact < 56):
+            if sucio:
+              img_overlay = img_bacteria11[:, :, :3]
+              img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+              put_img.overlay_image_alpha(img_result, img_overlay, xld+35, yld-35, alpha_mask_bacteria11)
+          else:
+            img_overlay = img_espuma[:, :, :3]
+            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+            #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
+            put_img.overlay_image_alpha(img_result, img_overlay, xld+35, yld-35, alpha_mask_espuma)
+
+
+          if (cont_bact < 64):
+            if sucio:
+              img_overlay = img_bacteria12[:, :, :3]
+              img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+              put_img.overlay_image_alpha(img_result, img_overlay, xrd-35, yrd+35, alpha_mask_bacteria12)
+          else:
+            img_overlay = img_espuma[:, :, :3]
+            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+            #Metodo que recive la imagen base, la imagen a dibuja su posicion y alpha 
+            put_img.overlay_image_alpha(img_result, img_overlay, xrd-35, yrd+35, alpha_mask_espuma)
 
             if sucio:
               checkSound.start()
@@ -420,94 +477,164 @@ class lavado_manos():
             aguader=False
             aguaizq=False
             sucio=False
-            espuma=False
+            
+
+
+
+
+
+
+
+          #Dibujado de los centros de las manos
+          img_result = cv2.circle(img_result, (xr,yr), radius=10, color=(0, 255, 0), thickness=5)
+          img_result = cv2.circle(img_result, (xl,yl), radius=10, color=(0, 255, 0), thickness=5)
+
+          if paso1 or paso3:
+            #Posicion del grifo
+            xg=650
+            yg=550 
+
+
+            #Agua control
+            if (xl>=xg and xl<=xg+400) and (yl>=yg  and yl<=yg+170):
+              aguader=True
+
+            if (xr>=xg and xr<=xg+400) and (yr>=yg  and yr<=yg+170):
+              aguaizq=True
+              
+
+            if aguader and aguaizq and paso1:
+              checkSound.start()
+              paso1=False
+              paso2=True
+
+            #Dibujado y pocicionado del grifo 
+            img_overlay = img_grifo[:, :, :3]
+            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+            put_img.overlay_image_alpha(img_result, img_overlay, xg, yg, alpha_mask_grifo)
+
+            #Dibujar rectangulo agua
+            start_agua = (xg, yg) 
+            end_agua = (xg+400, yg+170)
+            color = (255, 0, 0) 
+            thickness = 2
+            img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
+
+          if paso3:
+            #Control del lavado de manos    
+            if (xr>=xg and xr<=xg+400) and (yr>=yg  and yr<=yg+170) and (xl>=xg and xl<=xg+400) and (yl>=yg  and yl<=yg+170) and sucio ==False:
+              cont_bact = cont_bact -1
+              dibujar_gotas(12,img_result)
+              if cont_bact < 5:
+                checkSound.start()
+                paso4=True
+                paso3=False
+                
 
           
+
 
 
           #Ajustes de la posicion del jabon y funcion
-          #Funciones
-          if(jabMano ):
-            if(manoR):
-              xj = xr
-              yj = yr
+          if(paso2):
+            if(jabMano):
+              if(manoR):
+                xj = xr
+                yj = yr
+
+              else:
+                xj = xl
+                yj = yl
 
             else:
-              xj = xl
-              yj = yl
+              xj = 350
+              yj = 250 
+              # 'Hitbox' del jabon 
+              if ((xl>=xj and xl<=xj+50) and (yl>=yj  and yl<=xj+50) & aguader & aguaizq):
+                print('jabon der')
+                
+                jabMano=True
+                espuma=True
+                checkSound.start()
 
-          else:
-            xj = 350
-            yj = 250 
-            # 'Hitbox' del jabon 
-            if ((xl>=xj and xl<=xj+50) and (yl>=yj  and yl<=xj+50) & aguader & aguaizq):
-              print('jabon der')
-              
-              jabMano=True
-              espuma=True
-              checkSound.start()
+              elif ((xr>=xj and xr<=xj+50) and (yr>=yj  and yr<=xj+50)& aguader & aguaizq):
+                print('jabon izq')
+                
+                jabMano=True
+                manoR=True
+                espuma=True
+                checkSound.start()
 
-            elif ((xr>=xj and xr<=xj+50) and (yr>=yj  and yr<=xj+50)& aguader & aguaizq):
-              print('jabon izq')
-              
-              jabMano=True
-              manoR=True
-              espuma=True
-              checkSound.start()
+            #Dibujado del jabon
+            img_overlay = img_jabon[:, :, :3]
+            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+            put_img.overlay_image_alpha(img_result, img_overlay, xj, yj, alpha_mask_jabon) 
+            
+            #Dibujar rectangulo agua
+            start_agua = (xj, yj) 
+            end_agua = (xj+50, yj+50)
+            color = (255, 0, 255) 
+            thickness = 2
+            img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
+
+
+
+
+
 
 
           if(espuma):
-            if (xl+160>=xr and xl-140<=xr) and (yl+160>=yr  and yl-140<=yr):
+            if (xl+170>=xr and xl-150<=xr) and (yl+170>=yr  and yl-150<=yr):
               dibujar_burbujas(12,img_result)
               #Registro del tiempo para que desaparescan las bacterias
-              if cont_bact < 41 :
+              if cont_bact < 65 :
                 cont_bact = cont_bact +1
+              else:  
+                paso3=True
+                paso2=False
+                espuma=False
+                
 
 
 
-          #Agua control
-          if (xl>=800 and xl<=1300) and (yl>=500  and yl<=670):
-            aguader=True
+          if paso4:
+            #Posicion del toalla
+            xt=700
+            yt=0
+            #Toalla control y brillo
+            if (xl>=xt and xl<=xt+100) and (yl>=yt  and yl<=yt+100):
+              aguader=False
+              if sucio == False:
+                brilloder = True
 
-          if (xr>=800 and xr<=1300) and (yr>=500  and yr<=670):
-            aguaizq=True
-            
-
-          #Check mojado de manos
-          if aguader and aguaizq and ctrlchek and ctrlchek2:
-            checkSound.start()
-            ctrlchek=False
-
-          #Check enguagado de manos
-          if aguader== False and aguaizq==False and ctrlchek==False and ctrlchek2==False:
-            checkSound.start()
-            ctrlchek=True
+            if (xr>=xt and xr<=xt+100) and (yr>=yt  and yr<=yt+100):
+              aguaizq=False
+              if sucio == False:
+                brilloizq = True
 
 
-          #Toalla control y brillo
-          if (xl>=700 and xl<=1300) and (yl>=0  and yl<=250) and jabon==False:
-            aguader=False
-            if sucio == False:
-              brilloder = True
-
-          if (xr>=700 and xr<=1300) and (yr>=0  and yr<=250) and jabon==False:
-            aguaizq=False
-            if sucio == False:
-              brilloizq = True
-
-
-          
-          #Control del lavado de manos    
-          if (xr>=900 and xr<=1000) and (yr>=400  and yr<=770) and (xl>=900 and xl<=1000) and (yl>=400  and yl<=770) and sucio ==False:
-            cont_bact = cont_bact -1
-            jabon=False
-            if cont_bact < 5 and ctrlchek2:
+            if brilloder and brilloizq:
               checkSound.start()
-              ctrlchek2=False
+              paso4=False
+
+
+            #Dibujado y pocicionado de la Toalla
+            img_overlay = img_toalla[:, :, :3]
+            img_overlay = cv2.cvtColor(img_toalla, cv2.COLOR_BGR2RGB)
+            put_img.overlay_image_alpha(img_result, img_overlay, xt, yt, alpha_mask_toalla)
 
 
 
-              
+            #Dibujar rectangulo Toalla
+            start_agua = (xt, yt) 
+            end_agua = (xt+100, yt+100)
+            color = (0, 255, 0) 
+            thickness = 2
+            img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness) 
+
+
+
+
           if aguaizq:
             img_overlay = img_gota[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
@@ -526,64 +653,26 @@ class lavado_manos():
 
 
           if brilloizq:
-            img_overlay = img_brillo[:, :, :3]
-            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr+15, yr+45, alpha_mask_brillo)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr-35, yr-15, alpha_mask_brillo)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr-5, yr+15, alpha_mask_brillo)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr+30, yr-25, alpha_mask_brillo)
+            dibujar_brilloizq(6,img_result)
 
           if brilloder:
-            img_overlay = img_brillo[:, :, :3]
-            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl-50, yl-50, alpha_mask_brillo)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl+40, yl+25, alpha_mask_brillo)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl+35, yl-15, alpha_mask_brillo)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl-50, yl+50, alpha_mask_brillo)
+            dibujar_brilloder(6,img_result)
 
 
-          #Dibujado
-          #img = np.array(img_result)
-          #img_result = img[:, :, :3].copy()
-          if jabon:
-            img_overlay = img_jabon[:, :, :3]
-            img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            put_img.overlay_image_alpha(img_result, img_overlay, xj, yj, alpha_mask_jabon) 
-
-
-          #Dibujado y pocicionado del grifo 
-          img_overlay = img_grifo[:, :, :3]
-          img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-          put_img.overlay_image_alpha(img_result, img_overlay, 800, 550, alpha_mask_grifo) 
 
           #Dibujado y pocicionado del espuma
           #img_overlay = img_espuma[:, :, :3]
           #img_overlay = cv2.cvtColor(img_espuma, cv2.COLOR_BGR2RGB)
           #put_img.overlay_image_alpha(img_result, img_overlay, xe, ye, alpha_mask_espuma)
 
-          #Dibujado y pocicionado de la Toalla
-          img_overlay = img_toalla[:, :, :3]
-          img_overlay = cv2.cvtColor(img_toalla, cv2.COLOR_BGR2RGB)
-          put_img.overlay_image_alpha(img_result, img_overlay, 800, 0, alpha_mask_toalla)
-
-
-
           #Esta linea se encarga de dibujar el esqueleto sobre la persona 
           #mp_drawing.draw_landmarks(img_result, results2.pose_landmarks, mp_pose.POSE_CONNECTIONS)
           
-      
-
-
-
-
-
-        
-
 
         #Fin del contador de FPS
-        end = time.time()
-        totalTime = end-start 
-        fps = 1 / totalTime
+        # end = time.time()
+        # totalTime = end-start 
+        # fps = 1 / totalTime
 
         #Dibujado de FPS
         # cv2.putText(img_result, str(int(fps)), (20, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,

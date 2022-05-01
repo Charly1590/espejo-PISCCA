@@ -25,9 +25,9 @@ class lavado_dientes():
           return_action=True
 
   def dibujar_burbujas (n, img_result, mx, my):
-      img_burbuja = np.array(Image.open("recursos/autoc/cepilladodientes/espuma.png"))
+      img_burbuja = np.array(Image.open("recursos/autoc/cepilladodientes/Espuma.png"))
       img_burbuja=cv2.rotate(img_burbuja, cv2.ROTATE_90_COUNTERCLOCKWISE)
-      img_burbuja=cv2.resize(img_burbuja,(30 ,40 ))
+      # img_burbuja=cv2.resize(img_burbuja,(30 ,40))
       alpha_mask_burbuja= img_burbuja[:, :, 3] / 255.0
 
       while (n > 0):
@@ -42,9 +42,9 @@ class lavado_dientes():
       return img_result
   
   def dibujar_brillos (n, img_result, mx, my):
-      img_brillo = np.array(Image.open("recursos/autoc/cepilladodientes/brillo.png"))
+      img_brillo = np.array(Image.open("recursos/autoc/cepilladodientes/Brillo1.png"))
       img_brillo=cv2.rotate(img_brillo, cv2.ROTATE_90_COUNTERCLOCKWISE)
-      img_brillo=cv2.resize(img_brillo,(30 ,130 ))
+      # img_brillo=cv2.resize(img_brillo,(30 ,130))
       alpha_mask_burbuja= img_brillo[:, :, 3] / 255.0
 
       while (n > 0):
@@ -66,6 +66,7 @@ class lavado_dientes():
 
   def actividad():
     
+    # Variable globales
     cepillo_mano=False
     cepillo_mano_derecha=False
     cepillo_mano_izquierda=False
@@ -77,6 +78,16 @@ class lavado_dientes():
     soundCheck=True
     vectSoundsThread=[]
     vectSoundsThreadCheck=[]
+    global return_action
+    return_action=False
+
+    zhand=0
+    zmouth=0
+    mx=0
+    my=0
+    rhx=0
+    rhy=0
+
     """
       Se pondra a la ventana en pantalla completa para evitar
       los bordes de la interfaz del sistema
@@ -99,81 +110,66 @@ class lavado_dientes():
     # Carga de imagenes
     img_boca = np.array(Image.open("recursos/autoc/cepilladodientes/Boca.png"))
     img_boca=cv2.rotate(img_boca, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_boca=cv2.resize(img_boca,(50,100))
+    # img_boca=cv2.resize(img_boca,(50,100))
 
     img_cepillo = np.array(Image.open("recursos/autoc/cepilladodientes/cepillo1.png"))
     img_cepillo=cv2.rotate(img_cepillo, cv2.ROTATE_90_COUNTERCLOCKWISE)
     img_cepillo=cv2.rotate(img_cepillo, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_cepillo=cv2.resize(img_cepillo,(200,50))
+    # img_cepillo=cv2.resize(img_cepillo,(200,50))
 
-    img_pasta = np.array(Image.open("recursos/autoc/cepilladodientes/pastaDientes.png"))
-    img_pasta=cv2.rotate(img_pasta, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_pasta=cv2.rotate(img_pasta, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_pasta=cv2.resize(img_pasta,(200,200))
+    img_pasta = np.array(Image.open("recursos/autoc/cepilladodientes/Pasta.png"))
+    img_pasta = cv2.rotate(img_pasta, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    img_pasta = cv2.rotate(img_pasta, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    # img_pasta=cv2.resize(img_pasta,(200,200))
 
     img_cepillo_right= np.array(Image.open("recursos/autoc/cepilladodientes/cepillo1.png"))
     img_cepillo_right=cv2.rotate(img_cepillo_right, cv2.ROTATE_90_CLOCKWISE)
-    img_cepillo_right=cv2.resize(img_cepillo_right,(50,200))
+    # img_cepillo_right=cv2.resize(img_cepillo_right,(50,200))
     
-    img_cepilloPasta_right= np.array(Image.open("recursos/autoc/cepilladodientes/cepilloConPasta.png"))
+    img_cepilloPasta_right= np.array(Image.open("recursos/autoc/cepilladodientes/CepilloPasta.png"))
     img_cepilloPasta_right=cv2.rotate(img_cepilloPasta_right, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_cepilloPasta_right=cv2.resize(img_cepilloPasta_right,(50,200))
+    # img_cepilloPasta_right=cv2.resize(img_cepilloPasta_right,(50,200))
 
-    img_pasta_right= np.array(Image.open("recursos/autoc/cepilladodientes/pastaDientes.png"))
-    img_pasta_right=cv2.rotate(img_pasta_right, cv2.ROTATE_90_CLOCKWISE)
-    img_pasta_right=cv2.resize(img_pasta_right,(200,200))
+    img_pasta_right= np.array(Image.open("recursos/autoc/cepilladodientes/Pasta.png"))
+    img_pasta_right=cv2.rotate(img_pasta_right, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    # img_pasta_right=cv2.resize(img_pasta_right,(200,200))
 
     img_cepillo_left= np.array(Image.open("recursos/autoc/cepilladodientes/cepillo1.png"))
     img_cepillo_left=cv2.rotate(img_cepillo_left, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_cepillo_left=cv2.resize(img_cepillo_left,(50,200))
+    # img_cepillo_left=cv2.resize(img_cepillo_left,(50,200))
 
-    img_cepilloPasta_left= np.array(Image.open("recursos/autoc/cepilladodientes/cepilloConPasta.png"))
+    img_cepilloPasta_left= np.array(Image.open("recursos/autoc/cepilladodientes/CepilloPasta.png"))
     img_cepilloPasta_left=cv2.rotate(img_cepilloPasta_left, cv2.ROTATE_90_CLOCKWISE)
-    img_cepilloPasta_left=cv2.resize(img_cepilloPasta_left,(50,200))
+    # img_cepilloPasta_left=cv2.resize(img_cepilloPasta_left,(50,200))
 
-    img_pasta_left= np.array(Image.open("recursos/autoc/cepilladodientes/pastaDientes.png"))
-    img_pasta_left=cv2.rotate(img_pasta_left, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_pasta_left=cv2.resize(img_pasta_left,(200,200))
+    img_pasta_left= np.array(Image.open("recursos/autoc/cepilladodientes/Pasta.png"))
+    img_pasta_left=cv2.rotate(img_pasta_left, cv2.ROTATE_90_CLOCKWISE)
+    # img_pasta_left=cv2.resize(img_pasta_left,(200,200))
 
-    img_return = np.array(Image.open("recursos/menu/return.png"))
+    img_return = np.array(Image.open("recursos/autoc/cepilladodientes/volver.png"))
     img_return=cv2.rotate(img_return, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_return=cv2.resize(img_return,(150,150))
+    # img_return=cv2.resize(img_return,(150,150))
 
     img_bacteria1= np.array(Image.open("recursos/autoc/cepilladodientes/bacteria1.png"))
     img_bacteria1=cv2.rotate(img_bacteria1, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_bacteria1=cv2.resize(img_bacteria1,(30,30))
+    # img_bacteria1=cv2.resize(img_bacteria1,(30,30))
     
     img_bacteria2= np.array(Image.open("recursos/autoc/cepilladodientes/bacteria3.png"))
     img_bacteria2=cv2.rotate(img_bacteria2, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_bacteria2=cv2.resize(img_bacteria2,(30,30))
+    # img_bacteria2=cv2.resize(img_bacteria2,(30,30))
 
     img_bacteria3= np.array(Image.open("recursos/autoc/cepilladodientes/bacterias7.png"))
     img_bacteria3=cv2.rotate(img_bacteria3, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_bacteria3=cv2.resize(img_bacteria3,(30,30))
+    # img_bacteria3=cv2.resize(img_bacteria3,(30,30))
 
     img_bacteria4= np.array(Image.open("recursos/autoc/cepilladodientes/bacterias9.png"))
     img_bacteria4=cv2.rotate(img_bacteria4, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_bacteria4=cv2.resize(img_bacteria4,(30,30))
+    # img_bacteria4=cv2.resize(img_bacteria4,(30,30))
     
     img_bacteria5= np.array(Image.open("recursos/autoc/cepilladodientes/bacterias12.png"))
     img_bacteria5=cv2.rotate(img_bacteria5, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_bacteria5=cv2.resize(img_bacteria5,(30,30))
+    # img_bacteria5=cv2.resize(img_bacteria5,(30,30))
 
-    global return_action
-
-    
-
-    return_action=False
-
-    zhand=0
-    zmouth=0
-    mx=0
-    my=0
-    rhx=0
-    rhy=0
-
-    
-    
     """
       Se carga la red neuronal con un modelo de complegidad
       basico para evitar una carga mayor al dispositivo,

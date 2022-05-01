@@ -60,7 +60,7 @@ class lavado_manos():
 
 
     #Captura de Video
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,1360)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,768)
@@ -486,8 +486,8 @@ class lavado_manos():
 
 
           #Dibujado de los centros de las manos
-          img_result = cv2.circle(img_result, (xr,yr), radius=10, color=(0, 255, 0), thickness=5)
-          img_result = cv2.circle(img_result, (xl,yl), radius=10, color=(0, 255, 0), thickness=5)
+          # img_result = cv2.circle(img_result, (xr,yr), radius=10, color=(0, 255, 0), thickness=5)
+          # img_result = cv2.circle(img_result, (xl,yl), radius=10, color=(0, 255, 0), thickness=5)
 
           if paso1 or paso3:
             #Posicion del grifo
@@ -514,11 +514,11 @@ class lavado_manos():
             put_img.overlay_image_alpha(img_result, img_overlay, xg, yg, alpha_mask_grifo)
 
             #Dibujar rectangulo agua
-            start_agua = (xg, yg) 
-            end_agua = (xg+400, yg+170)
-            color = (255, 0, 0) 
-            thickness = 2
-            img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
+            # start_agua = (xg, yg) 
+            # end_agua = (xg+400, yg+170)
+            # color = (255, 0, 0) 
+            # thickness = 2
+            # img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
 
           if paso3:
             #Control del lavado de manos    
@@ -550,14 +550,14 @@ class lavado_manos():
               xj = 350
               yj = 250 
               # 'Hitbox' del jabon 
-              if ((xl>=xj and xl<=xj+50) and (yl>=yj  and yl<=xj+50) & aguader & aguaizq):
+              if ((xl>=xj and xl<=xj+150) and (yl>=yj  and yl<=xj+150) & aguader & aguaizq):
                 print('jabon der')
                 
                 jabMano=True
                 espuma=True
                 checkSound.start()
 
-              elif ((xr>=xj and xr<=xj+50) and (yr>=yj  and yr<=xj+50)& aguader & aguaizq):
+              elif ((xr>=xj and xr<=xj+150) and (yr>=yj  and yr<=xj+150)& aguader & aguaizq):
                 print('jabon izq')
                 
                 jabMano=True
@@ -570,12 +570,12 @@ class lavado_manos():
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             put_img.overlay_image_alpha(img_result, img_overlay, xj, yj, alpha_mask_jabon) 
             
-            #Dibujar rectangulo agua
-            start_agua = (xj, yj) 
-            end_agua = (xj+50, yj+50)
-            color = (255, 0, 255) 
-            thickness = 2
-            img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
+            #Dibujar rectangulo jabon 
+            # start_agua = (xj, yj) 
+            # end_agua = (xj+50, yj+50)
+            # color = (255, 0, 255) 
+            # thickness = 2
+            # img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
 
 
 
@@ -602,12 +602,12 @@ class lavado_manos():
             xt=700
             yt=0
             #Toalla control y brillo
-            if (xl>=xt and xl<=xt+100) and (yl>=yt  and yl<=yt+100):
+            if (xl>=xt and xl<=xt+150) and (yl>=yt  and yl<=yt+150):
               aguader=False
               if sucio == False:
                 brilloder = True
 
-            if (xr>=xt and xr<=xt+100) and (yr>=yt  and yr<=yt+100):
+            if (xr>=xt and xr<=xt+150) and (yr>=yt  and yr<=yt+150):
               aguaizq=False
               if sucio == False:
                 brilloizq = True
@@ -625,12 +625,12 @@ class lavado_manos():
 
 
 
-            #Dibujar rectangulo Toalla
-            start_agua = (xt, yt) 
-            end_agua = (xt+100, yt+100)
-            color = (0, 255, 0) 
-            thickness = 2
-            img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness) 
+            # #Dibujar rectangulo Toalla
+            # start_agua = (xt, yt) 
+            # end_agua = (xt+100, yt+100)
+            # color = (0, 255, 0) 
+            # thickness = 2
+            # img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness) 
 
 
 

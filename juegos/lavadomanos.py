@@ -16,7 +16,7 @@ class lavado_manos():
   def click_event(event, x, y, flags, params):
     global return_action
     if event == cv2.EVENT_LBUTTONDOWN:
-        print(x," ",y, "sdahsjk")
+        print(x," ",y, "Lavadomanos")
         if (x>=540 and x<=720) and (y>=30 and y<=150):
           return_action=True
 
@@ -42,7 +42,13 @@ class lavado_manos():
     paso3=False
     paso4=False
 
+    #Esta es la imagen que se muestra como guia durante el lavado de manos y su alpha
+    imagenGuia="recursos/autoc/lavmanos/MojarseLasManos.png"
+    imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/MojarseLasManos.png"
 
+
+    
+    
 
     #Tiempo de lavado de manos
     cont_bact= 0
@@ -77,13 +83,20 @@ class lavado_manos():
     #Bacterias 
     img_bacteria4 = np.array(Image.open("recursos/autoc/lavmanos/bacteria4.png"))
     img_bacteria4=cv2.rotate(img_bacteria4, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    #Creacion de Alpha
-    alpha_mask_bacteria4= img_bacteria4[:, :, 3] / 255.0
+    #Alpha
+    alpha_mask_bacteria4= np.array(Image.open("recursos/autoc/lavmanos/Alphas/bacteria4.png"))
+
+    #alpha_mask_bacteria4= img_bacteria4[:, :, 3] / 255.0
+    #cv2.imwrite("recursos/autoc/lavmanos/Alphas/bacteria4.png", alpha_mask_bacteria4)
+
+
+
 
     img_bacteria5 = np.array(Image.open("recursos/autoc/lavmanos/bacteria5.png"))
     img_bacteria5=cv2.rotate(img_bacteria5, cv2.ROTATE_90_COUNTERCLOCKWISE)
     #Creacion de Alpha
     alpha_mask_bacteria5= img_bacteria5[:, :, 3] / 255.0
+    
 
     img_bacteria6 = np.array(Image.open("recursos/autoc/lavmanos/bacteria6.png"))
     img_bacteria6=cv2.rotate(img_bacteria6, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -113,7 +126,7 @@ class lavado_manos():
     #Gota
     img_gota=np.array(Image.open("recursos/autoc/lavmanos/gota.png"))
     img_gota=cv2.rotate(img_gota, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_gota=cv2.resize(img_gota,(60,30))
+    
     #Creacion de Alpha
     alpha_mask_gota= img_gota[:, :, 3] / 255.0
 
@@ -121,32 +134,32 @@ class lavado_manos():
     #Jabon
     img_jabon = np.array(Image.open("recursos/autoc/lavmanos/jabon.png"))
     img_jabon=cv2.rotate(img_jabon, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_jabon=cv2.resize(img_jabon,(120,160))
+    
     #Creacion de Alpha
     alpha_mask_jabon= img_jabon[:, :, 3] / 255.0
 
     #Burbujas
     img_burbuja1 = np.array(Image.open("recursos/autoc/lavmanos/Burbuja1.png"))
     img_burbuja1=cv2.rotate(img_burbuja1, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    #img_burbuja=cv2.resize(img_burbuja,(100 ,100 ))
+    
     #Creacion de Alpha
     alpha_mask_burbuja1= img_burbuja1[:, :, 3] / 255.0
 
     img_burbuja2 = np.array(Image.open("recursos/autoc/lavmanos/Burbuja2.png"))
     img_burbuja2=cv2.rotate(img_burbuja2, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    #img_burbuja=cv2.resize(img_burbuja,(100 ,100 ))
+    
     #Creacion de Alpha
     alpha_mask_burbuja2= img_burbuja2[:, :, 3] / 255.0
   
     img_burbuja3 = np.array(Image.open("recursos/autoc/lavmanos/Burbuja3.png"))
     img_burbuja3=cv2.rotate(img_burbuja3, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    #img_burbuja=cv2.resize(img_burbuja,(100 ,100 ))
+    
     #Creacion de Alpha
     alpha_mask_burbuja3= img_burbuja3[:, :, 3] / 255.0
 
     img_burbuja4 = np.array(Image.open("recursos/autoc/lavmanos/Burbuja4.png"))
     img_burbuja4=cv2.rotate(img_burbuja4, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    #img_burbuja=cv2.resize(img_burbuja,(100 ,100 ))
+    
     #Creacion de Alpha
     alpha_mask_burbuja4= img_burbuja4[:, :, 3] / 255.0
 
@@ -154,7 +167,7 @@ class lavado_manos():
     #Toalla
     img_toalla= np.array(Image.open("recursos/autoc/lavmanos/toalla.png"))
     img_toalla=cv2.rotate(img_toalla, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_toalla=cv2.resize(img_toalla,(230,150))
+    
     #Creacion de Alpha
     alpha_mask_toalla = img_toalla[:, :, 3] / 255.0
 
@@ -162,36 +175,36 @@ class lavado_manos():
     #Espuma
     img_espuma= np.array(Image.open("recursos/autoc/lavmanos/espuma.png"))
     img_espuma=cv2.rotate(img_espuma, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_espuma=cv2.resize(img_espuma,(150,150))
+    
     #Creacion de Alpha
     alpha_mask_espuma = img_espuma[:, :, 3] / 255.0
 
     #Grifo
     img_grifo= np.array(Image.open("recursos/autoc/lavmanos/grifo.png"))
     img_grifo=cv2.rotate(img_grifo, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_grifo=cv2.resize(img_grifo,(330,180))
+    
     #Creacion de Alpha
     alpha_mask_grifo = img_grifo[:, :, 3] / 255.0
 
     #Brillo
     img_brillo= np.array(Image.open("recursos/autoc/lavmanos/brillo.png"))
     img_brillo=cv2.rotate(img_brillo, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_brillo=cv2.resize(img_brillo,(50,100))
+    
     #Creacion de Alpha
     alpha_mask_brillo = img_brillo[:, :, 3] / 255.0
 
     #Atras
     img_return = np.array(Image.open("recursos/menu/return.png"))
     img_return=cv2.rotate(img_return, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    img_return=cv2.resize(img_return,(150,150))
+    
 
 
     def dibujar_brilloizq (n, img_result):
       while (n > 0):
         xbl = random.randint(xr-75, xr+75)
         ybl = random.randint(yr-75, yr+75)
-        xb = int(xbl)  
-        yb = int(ybl)
+        xb = int(xbl)-80  
+        yb = int(ybl)-50
 
         img_overlay = img_brillo[:, :, :3]
         img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
@@ -203,8 +216,8 @@ class lavado_manos():
       while (n > 0):
         xbr = random.randint(xl-75, xl+75)
         ybr = random.randint(yl-75, yl+75)
-        xb = int(xbr)  
-        yb = int(ybr)
+        xb = int(xbr)-80
+        yb = int(ybr)-50
 
         img_overlay = img_brillo[:, :, :3]
         img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
@@ -289,7 +302,7 @@ class lavado_manos():
       while cap.isOpened():
 
         #Sonido Check
-        checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
+        checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/lavmanos/check.mp3",))
 
         #Lectura y volteado de imagen
         succes, image = cap.read()
@@ -492,19 +505,23 @@ class lavado_manos():
           if paso1 or paso3:
             #Posicion del grifo
             xg=650
-            yg=550 
-
+            yg=440 
+            #Tamaño de la imagen
+            xgf=xg+400
+            ygf=yg+270
 
             #Agua control
-            if (xl>=xg and xl<=xg+400) and (yl>=yg  and yl<=yg+170):
+            if (xl>=xg and xl<=xgf) and (yl>=yg  and yl<=ygf):
               aguader=True
 
-            if (xr>=xg and xr<=xg+400) and (yr>=yg  and yr<=yg+170):
+            if (xr>=xg and xr<=xgf) and (yr>=yg  and yr<=ygf):
               aguaizq=True
               
 
             if aguader and aguaizq and paso1:
               checkSound.start()
+              imagenGuia="recursos/autoc/lavmanos/CogerJabon.png"
+              imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/CogerJabon.png"
               paso1=False
               paso2=True
 
@@ -515,17 +532,19 @@ class lavado_manos():
 
             #Dibujar rectangulo agua
             start_agua = (xg, yg) 
-            end_agua = (xg+400, yg+170)
+            end_agua = (xgf, ygf)
             color = (255, 0, 0) 
             thickness = 2
             img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
 
           if paso3:
             #Control del lavado de manos    
-            if (xr>=xg and xr<=xg+400) and (yr>=yg  and yr<=yg+170) and (xl>=xg and xl<=xg+400) and (yl>=yg  and yl<=yg+170) and sucio ==False:
+            if (xr>=xg and xr<=xgf) and (yr>=yg  and yr<=ygf) and (xl>=xg and xl<=xgf) and (yl>=yg  and yl<=ygf) and sucio ==False:
               cont_bact = cont_bact -1
               dibujar_gotas(12,img_result)
               if cont_bact < 5:
+                imagenGuia="recursos/autoc/lavmanos/SecarseManos.png"
+                imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/SecarseManos.png"
                 checkSound.start()
                 paso4=True
                 paso3=False
@@ -539,43 +558,58 @@ class lavado_manos():
           if(paso2):
             if(jabMano):
               if(manoR):
-                xj = xr
-                yj = yr
+                xj = xr-75
+                yj = yr-100
 
               else:
-                xj = xl
-                yj = yl
+                xj = xl-75
+                yj = yl-100
 
             else:
               xj = 350
-              yj = 250 
+              yj = 260 
+
+              #Tamaño de la imagen
+              xjf = xj+154
+              yjf = yj+200
+
               # 'Hitbox' del jabon 
-              if ((xl>=xj and xl<=xj+50) and (yl>=yj  and yl<=xj+50) & aguader & aguaizq):
-                print('jabon der')
+              if ((xl>=xj and xl<=xjf) and (yl>=yj  and yl<=yjf) & aguader & aguaizq):
+                
                 
                 jabMano=True
                 espuma=True
+                imagenGuia="recursos/autoc/lavmanos/FregarseManos.png"
+                imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/FregarseManos.png"
                 checkSound.start()
 
-              elif ((xr>=xj and xr<=xj+50) and (yr>=yj  and yr<=xj+50)& aguader & aguaizq):
-                print('jabon izq')
+              elif ((xr>=xj and xr<=xjf) and (yr>=yj  and yr<=yjf)& aguader & aguaizq):
+                
                 
                 jabMano=True
                 manoR=True
                 espuma=True
+                imagenGuia="recursos/autoc/lavmanos/FregarseManos.png"
+                imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/FregarseManos.png"
                 checkSound.start()
+            
+            
+            #Tamaño de la imagen (Uso solo para ver el rectangulo)
+            xjf = xj+154
+            yjf = yj+200
+            
 
             #Dibujado del jabon
             img_overlay = img_jabon[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
             put_img.overlay_image_alpha(img_result, img_overlay, xj, yj, alpha_mask_jabon) 
             
-            #Dibujar rectangulo agua
-            start_agua = (xj, yj) 
-            end_agua = (xj+50, yj+50)
+            #Dibujar rectangulo jabon
+            start_jabon = (xj, yj) 
+            end_jabon = (xjf, yjf)
             color = (255, 0, 255) 
             thickness = 2
-            img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness)
+            img_result = cv2.rectangle(img_result, start_jabon, end_jabon, color, thickness)
 
 
 
@@ -589,7 +623,9 @@ class lavado_manos():
               #Registro del tiempo para que desaparescan las bacterias
               if cont_bact < 65 :
                 cont_bact = cont_bact +1
-              else:  
+              else: 
+                imagenGuia="recursos/autoc/lavmanos/QuitarJabon.png"
+                imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/QuitarJabon.png"
                 paso3=True
                 paso2=False
                 espuma=False
@@ -601,13 +637,16 @@ class lavado_manos():
             #Posicion del toalla
             xt=700
             yt=0
+            #Tamaño de la imagen
+            xtf=xt+275
+            ytf=yt+250
             #Toalla control y brillo
-            if (xl>=xt and xl<=xt+100) and (yl>=yt  and yl<=yt+100):
+            if (xl>=xt and xl<=xtf) and (yl>=yt  and yl<=ytf):
               aguader=False
               if sucio == False:
                 brilloder = True
 
-            if (xr>=xt and xr<=xt+100) and (yr>=yt  and yr<=yt+100):
+            if (xr>=xt and xr<=xtf) and (yr>=yt  and yr<=ytf):
               aguaizq=False
               if sucio == False:
                 brilloizq = True
@@ -624,32 +663,31 @@ class lavado_manos():
             put_img.overlay_image_alpha(img_result, img_overlay, xt, yt, alpha_mask_toalla)
 
 
-
             #Dibujar rectangulo Toalla
             start_agua = (xt, yt) 
-            end_agua = (xt+100, yt+100)
+            end_agua = (xtf, ytf)
             color = (0, 255, 0) 
             thickness = 2
             img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness) 
 
 
-
+          
 
           if aguaizq:
             img_overlay = img_gota[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr+15, yr+45, alpha_mask_gota)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr-35, yr-15, alpha_mask_gota)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr-5, yr+15, alpha_mask_gota)
-            put_img.overlay_image_alpha(img_result, img_overlay, xr+30, yr-25, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xr-15, yr+45, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xr-65, yr-15, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xr-35, yr+15, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xr, yr-25, alpha_mask_gota)
 
           if aguader:
             img_overlay = img_gota[:, :, :3]
             img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl-50, yl-50, alpha_mask_gota)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl+40, yl+25, alpha_mask_gota)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl+35, yl-15, alpha_mask_gota)
-            put_img.overlay_image_alpha(img_result, img_overlay, xl-50, yl+50, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xl-80, yl-50, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xl+10, yl+25, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xl+5, yl-15, alpha_mask_gota)
+            put_img.overlay_image_alpha(img_result, img_overlay, xl-70, yl+50, alpha_mask_gota)
 
 
           if brilloizq:
@@ -660,10 +698,15 @@ class lavado_manos():
 
 
 
-          #Dibujado y pocicionado del espuma
-          #img_overlay = img_espuma[:, :, :3]
-          #img_overlay = cv2.cvtColor(img_espuma, cv2.COLOR_BGR2RGB)
-          #put_img.overlay_image_alpha(img_result, img_overlay, xe, ye, alpha_mask_espuma)
+          #Dibujado y pocicionado de los pictogramas Guia (Estos cambian progresivamente)
+          img_guia = np.array(Image.open(imagenGuia))
+          img_guia=cv2.rotate(img_guia, cv2.ROTATE_90_COUNTERCLOCKWISE)
+          alpha_guia= np.array(Image.open(imagenGuiaAlpha))
+          img_overlay = img_guia[:, :, :3]
+          img_overlay = cv2.cvtColor(img_guia, cv2.COLOR_BGR2RGB)
+          put_img.overlay_image_alpha(img_result, img_overlay, 50, 240, alpha_guia)
+
+
 
           #Esta linea se encarga de dibujar el esqueleto sobre la persona 
           #mp_drawing.draw_landmarks(img_result, results2.pose_landmarks, mp_pose.POSE_CONNECTIONS)
@@ -681,12 +724,12 @@ class lavado_manos():
 
         #Display De imagenes
         try:
-          img_result=put_img.put_elements_in_viedo(20,20,img_result,img_return)
+          img_result=put_img.put_elements_in_viedo(20,10,img_result,img_return)
           img_result=cv2.rotate(img_result, cv2.ROTATE_90_CLOCKWISE)
           cv2.imshow('lavado_manos', img_result)
           cv2.setMouseCallback('lavado_manos', lavado_manos.click_event)
         except:
-          image=put_img.put_elements_in_viedo(20,20,image,img_return)
+          image=put_img.put_elements_in_viedo(20,10,image,img_return)
           image=cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
           cv2.imshow('lavado_manos', image)
           cv2.setMouseCallback('lavado_manos', lavado_manos.click_event)

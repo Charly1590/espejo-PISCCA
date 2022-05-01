@@ -3,6 +3,9 @@ import numpy as np
 from PIL import Image
 
 class Posicionamiento():
+
+    def __init__(self) -> None:
+        pass
     
     def overlay_image_alpha(img, img_overlay, x, y, alpha_mask):
         """Overlay `img_overlay` onto `img` at (x, y) and blend using `alpha_mask`.
@@ -44,7 +47,7 @@ class Posicionamiento():
     def put_image_in_any_position(x, y, img, name, height, weight):
 
         new_image = np.array(Image.open(name))
-        new_image=cv2.resize(new_image,(height,weight))
+        # new_image=cv2.resize(new_image,(height,weight))
         alpha_mask_new_image= new_image[:, :, 3] / 255.0
 
         img = np.array(img)

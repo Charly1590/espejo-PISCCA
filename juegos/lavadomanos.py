@@ -66,7 +66,7 @@ class lavado_manos():
 
 
     #Captura de Video
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,1360)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,768)
@@ -499,8 +499,8 @@ class lavado_manos():
 
 
           #Dibujado de los centros de las manos
-          img_result = cv2.circle(img_result, (xr,yr), radius=10, color=(0, 255, 0), thickness=5)
-          img_result = cv2.circle(img_result, (xl,yl), radius=10, color=(0, 255, 0), thickness=5)
+          # img_result = cv2.circle(img_result, (xr,yr), radius=10, color=(0, 255, 0), thickness=5)
+          # img_result = cv2.circle(img_result, (xl,yl), radius=10, color=(0, 255, 0), thickness=5)
 
           if paso1 or paso3:
             #Posicion del grifo

@@ -1,81 +1,136 @@
 import cv2
+from defer import return_value
 import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image
-import screeninfo 
 from modulos.moduloPosicionarImgs import Posicionamiento as put_img
-from juegos.lavado_dientes import lavado_dientes as act_dientes
-from juegos.lavadomanos import lavado_manos as act_manos
+import screeninfo
+import random
 
+from playsound import playsound
+import multiprocessing
 
-screen = screeninfo.get_monitors()[0] 
-cv2.namedWindow('image', cv2.WND_PROP_FULLSCREEN)
-cv2.moveWindow('image', screen.x - 1, screen.y - 1)
-cv2.setWindowProperty('image', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN) 
+class introduccion_lavado_dientes():
+  
+  return_action=False
 
-img = cv2.imread('recursos/menu/Fondo.jpg')
-img = cv2.resize(img,(1360,768))
-img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
-
-def click_event_menu_inicial(event, x, y, flags, params):
+  def click_event(event, x, y, flags, params):
+    global return_action
     if event == cv2.EVENT_LBUTTONDOWN:
-        if (x>=70 and x<=700) and (y>=660 and y<=900):
-            menu_principal()
-
-def click_event_menu_principal(event, x, y, flags, params):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        print(x," ",y, "principal")
-        if (x>=170 and x<=620) and (y>=150 and y<=620):
-            menu_autocuidado()
-        if (x>=170 and x<=620) and (y>=720 and y<=1190):
-            menu_seleccion_genero()
+        print(x," ",y, "sdahsjk")
         if (x>=600 and x<=750) and (y>=30 and y<=140):
-            menu_inicial()
+          return_action=True
 
-def click_event_menu_autocuidado(event, x, y, flags, params):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        print(x," ",y, "AUTOCUIDADO")
-        if (x>=170 and x<=620) and (y>=150 and y<=620):
-            act_dientes.actividad()
-        if (x>=170 and x<=620) and (y>=720 and y<=1190):
-            act_manos.actividad()
-        if (x>=600 and x<=750) and (y>=30 and y<=140):
-            menu_principal()
+  def secuencia():
+    
+    global return_action
+    return_action=False
 
-def menu_inicial():
-    img_result=put_img.put_image_in_any_position(55, 130, img, "recursos/personajes/Personajes1.png", 500,600)
-    img_result=put_img.put_image_in_any_position(355, 400, img_result, "recursos/personajes/Personajes4.png", 350,350)
-    img_result=put_img.put_image_in_any_position(55, 650, img_result, "recursos/menu/ImgMenu1.png", 660,270)
-    cv2.imshow('image',img_result)
-    cv2.setMouseCallback('image', click_event_menu_inicial)
+    """
+      Se pondra a la ventana en pantalla completa para evitar
+      los bordes de la interfaz del sistema
+    """
+    screen = screeninfo.get_monitors()[0] 
+    cv2.namedWindow('image2', cv2.WND_PROP_FULLSCREEN)
+    cv2.moveWindow('image2', screen.x - 1, screen.y - 1)
+    cv2.setWindowProperty('image2', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN) 
+    
+    # Carga de imagenes
+    img = cv2.imread('recursos/menu/Fondo.jpg')
+    img = cv2.resize(img,(1360,768))
+    img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
-def menu_principal():
-    img_result=put_img.put_image_in_any_position(150, 130, img, "recursos/menu/btnAutoc.png", 500,500)
-    img_result=put_img.put_image_in_any_position(150, 700, img_result, "recursos/menu/BtnEdSex.png", 500,500)
-    img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/return.png", 150,150)
-    cv2.imshow('image',img_result)
-    cv2.setMouseCallback('image', click_event_menu_principal)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    img = put_img.put_image_in_any_position(610, 20, img, "recursos/menu/volver.png")
 
-def menu_autocuidado():
-    img_result=put_img.put_image_in_any_position(150, 130, img, "recursos/menu/btnimg3.png", 500,500)
-    img_result=put_img.put_image_in_any_position(150, 700, img_result, "recursos/menu/btnimg7.png", 500,500)
-    img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/return.png", 150,150)
-    cv2.imshow('image',img_result)
-    cv2.setMouseCallback('image', click_event_menu_autocuidado)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    introduccion=True
+    primera_indicacion=True
+    agarra_cepillo=True
+    agarra_pasta=True
+    poner_pasta=True
+    cepillarse_dientes=True
+    arriba_abajo=True
 
-def menu_seleccion_genero():
-    img_result=put_img.put_image_in_any_position(150, 130, img, "recursos/menu/niña.png", 500,500)
-    img_result=put_img.put_image_in_any_position(150, 700, img_result, "recursos/menu/niño.png", 500,500)
-    img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/return.png", 150,150)
-    cv2.imshow('image',img_result)
-    cv2.setMouseCallback('image', click_event_menu_autocuidado)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    
+    introduccion_thread=None
+    primera_indicacion_thread=None
+    agarra_cepillo_thread=None
+    agarra_pasta_thread=None
+    poner_pasta_thread=None
+    cepillarse_dientes_thread=None
+    arriba_abajo_thread=None
 
-menu_inicial()
-cv2.waitKey(0)
-cv2.destroyAllWindows() 
+    img_result=None
+    while 3==3:
+
+        try:
+          
+          if introduccion:
+              cv2.imshow('image2', img)
+              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+              introduccion_thread = multiprocessing.Process(target=playsound, args=("recursos/audios/lavadoDientes/inicio.mp3",))
+              introduccion_thread.start()
+              introduccion=False
+
+          print(introduccion_thread.is_alive())
+
+          if not introduccion_thread.is_alive():
+            if primera_indicacion: 
+              cv2.imshow('image2', img)
+              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+              primera_indicacion_thread = multiprocessing.Process(target=playsound, args=("recursos/audios/lavadoDientes/indicacionInicial.mp3",))
+              primera_indicacion_thread.start()
+              primera_indicacion=False
+
+            if not primera_indicacion_thread.is_alive():
+                if agarra_cepillo:
+                  img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/CogerCepillo.png")
+                  cv2.imshow('image2', img_result)
+                  cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+                  agarra_cepillo_thread = multiprocessing.Process(target=playsound, args=("recursos/audios/lavadoDientes/cogerCepillo.mp3",))
+                  agarra_cepillo_thread.start()
+                  agarra_cepillo=False
+
+                if not agarra_cepillo_thread.is_alive():
+                    if agarra_pasta:
+                      img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/AgarrarPasta.png")
+                      cv2.imshow('image2', img_result)
+                      cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+                      agarra_pasta_thread = multiprocessing.Process(target=playsound, args=("recursos/audios/lavadoDientes/aggarraLaPasta.mp3",))
+                      agarra_pasta_thread.start()
+                      agarra_pasta=False
+
+                    if not agarra_pasta_thread.is_alive():
+                        if poner_pasta:
+                          img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/PonersePasta.png")
+                          cv2.imshow('image2', img_result)
+                          cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+                          poner_pasta_thread = multiprocessing.Process(target=playsound, args=("recursos/audios/lavadoDientes/ponerPastaCepillo.mp3",))
+                          poner_pasta_thread.start()
+                          poner_pasta=False
+
+                        if not poner_pasta_thread.is_alive():
+                            if cepillarse_dientes:
+                              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/lavarseDientes.png")
+                              cv2.imshow('image2', img_result)
+                              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+                              cepillarse_dientes_thread = multiprocessing.Process(target=playsound, args=("recursos/audios/lavadoDientes/cepillarseDientes.mp3",))
+                              cepillarse_dientes_thread.start()
+                              cepillarse_dientes=False
+            
+            if not cepillarse_dientes_thread.is_alive():
+                if arriba_abajo:
+                  cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+                  arriba_abajo_thread = multiprocessing.Process(target=playsound, args=("recursos/audios/lavadoDientes/arribaAbajoCepillado.mp3",))
+                  arriba_abajo_thread.start()
+                  arriba_abajo=False
+          
+        except Exception as e:
+          print(e)
+
+        try:
+            if return_action or (cv2.waitKey(5) & 0xFF == 27):
+                cv2.destroyWindow('image2')
+                break
+        except Exception as e:
+            print(e)
+
+          

@@ -8,12 +8,14 @@ from juegos.lavado_dientes import lavado_dientes as act_dientes
 from juegos.lavadomanos import lavado_manos as act_manos
 from introducciones.introlavadoDientes import introduccion_lavado_dientes
 from introducciones.introlavadoManos import introduccion_lavado_manos
+from juegos.prevencionnina import prevencion_nina as prev_nina
 
 class menus():
     screen = screeninfo.get_monitors()[0] 
     cv2.namedWindow('image', cv2.WND_PROP_FULLSCREEN)
     cv2.moveWindow('image', screen.x - 1, screen.y - 1)
     cv2.setWindowProperty('image', cv2.WND_PROP_FULLSCREEN,  cv2.WINDOW_FULLSCREEN) 
+
 
     img = cv2.imread('recursos/menu/Fondo.jpg')
     img = cv2.resize(img,(1360,768))
@@ -79,6 +81,18 @@ class menus():
         img_result=put_img.put_image_in_any_position(55, 650, img_result, "recursos/menu/ImgMenu1.png")
         cv2.imshow('image',img_result)
         cv2.setMouseCallback('image', menus.click_event_menu_inicial)
+
+    def click_event_menu_seleccion_genero(event, x, y, flags, params):
+        if event == cv2.EVENT_LBUTTONDOWN:
+            print(x," ",y, "SELECCION_GENERO")
+            if (x>=170 and x<=620) and (y>=150 and y<=620):
+                prev_nina.actividad()
+            if (x>=170 and x<=620) and (y>=720 and y<=1190):
+                act_manos.actividad()
+            if (x>=600 and x<=750) and (y>=30 and y<=140):
+                menus.menu_principal()
+
+
 
     def menu_principal():
         img_result=put_img.put_image_in_any_position(150, 130, menus.img, "recursos/menu/btnAutoc.png")

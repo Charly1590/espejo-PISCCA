@@ -10,6 +10,7 @@ from introducciones.introlavadoDientes import introduccion_lavado_dientes
 from introducciones.introlavadoManos import introduccion_lavado_manos
 
 class menus():
+
     screen = screeninfo.get_monitors()[0] 
     cv2.namedWindow('image', cv2.WND_PROP_FULLSCREEN)
     cv2.moveWindow('image', screen.x - 1, screen.y - 1)
@@ -65,9 +66,6 @@ class menus():
             print(x," ",y, "AUTOCUIDADO")
             if (x>=170 and x<=620) and (y>=150 and y<=620):
                 introduccion_lavado_manos.secuencia()
-                # menus.menu_cepillado_dientes()
-                # act_dientes.actividad()
-                # intro_dientes.menu_seleccion_genero
             if (x>=170 and x<=620) and (y>=720 and y<=1190):
                 act_manos.actividad()
             if (x>=600 and x<=750) and (y>=30 and y<=140):

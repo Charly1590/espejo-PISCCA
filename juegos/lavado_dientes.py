@@ -419,7 +419,6 @@ class lavado_dientes():
 
         # cv2.putText(img_result, str(int(fps)), (20, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
         #                 (255, 0, 255), 3)
-          
 
         try:
           img_result=put_img.put_elements_in_viedo(20,20,img_result,img_return)
@@ -434,6 +433,13 @@ class lavado_dientes():
         
         try:
           if return_action or (cv2.waitKey(5) & 0xFF == 27):
+            try:
+              if vectSoundsThread[0].is_alive():
+                  vectSoundsThread[0].terminate()
+              if vectSoundsThreadCheck[0].is_alive():
+                  vectSoundsThreadCheck[0].terminate()
+            except Exception as e:
+              print(e)
             cv2.destroyWindow('lavado_dientes')
             break
         except Exception as e:

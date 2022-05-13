@@ -88,6 +88,9 @@ class lavado_dientes():
     rhx=0
     rhy=0
     
+    #Esta es la imagen que se muestra como guia durante el cepillado de dientes y su alpha
+    imagenGuia="recursos/autoc/cepilladodientes/CogerCepillo.png"
+    imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/CogerCepillo.png"
 
     mixer.init()
 
@@ -244,6 +247,9 @@ class lavado_dientes():
               cepillo_mano_derecha=True
               mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
               mixer.music.play()
+              #Esta es la imagen que se muestra como guia durante el cepillado de dientes y su alpha
+              imagenGuia="recursos/autoc/cepilladodientes/AgarrarPasta.png"
+              imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/AgarrarPasta.png"
               
               
             if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
@@ -251,6 +257,9 @@ class lavado_dientes():
               cepillo_mano_izquierda=True
               mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
               mixer.music.play()
+              #Esta es la imagen que se muestra como guia durante el cepillado de dientes y su alpha
+              imagenGuia="recursos/autoc/cepilladodientes/AgarrarPasta.png"
+              imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/AgarrarPasta.png"
               
               
             img_result=put_img.put_elements_in_viedo(300,300,img_result,img_cepillo)
@@ -310,6 +319,8 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
                 if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
                   pasta_mano_izquierda=2
+                  imagenGuia="recursos/autoc/cepilladodientes/PonersePasta.png"
+                  imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/PonersePasta.png"
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
               else:
@@ -321,6 +332,9 @@ class lavado_dientes():
                 # cv2.putText(img_result, str(int(distance_hands)), (150, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
                 #           (255, 0, 255), 3)
                 if distance_hands>=85 and distance_hands<=200:
+
+                  imagenGuia="recursos/autoc/cepilladodientes/Cepillarse.png"
+                  imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/Cepillarse.png"
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
                   pasta_mano_izquierda = 3
@@ -369,6 +383,9 @@ class lavado_dientes():
               if pasta_mano_derecha == 1:
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
                 if (rhx>=380 and rhx<=616) and (rhy>=200 and rhy<=596):
+                  
+                  imagenGuia="recursos/autoc/cepilladodientes/PonersePasta.png"
+                  imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/PonersePasta.png"
                   pasta_mano_derecha=2
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
@@ -379,6 +396,8 @@ class lavado_dientes():
                 distance_hands=round(math.sqrt((lhx-rhx)**2+(lhy-rhy)**2),2) 
                 if distance_hands>=85 and distance_hands<=200:
                   pasta_mano_derecha=3
+                  imagenGuia="recursos/autoc/cepilladodientes/Cepillarse.png"
+                  imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/Cepillarse.png"
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
                   
@@ -402,6 +421,15 @@ class lavado_dientes():
                 except:
                   img_result=img_result
                 
+
+          #Dibujado y pocicionado de los pictogramas Guia (Estos cambian progresivamente)
+          img_guia = np.array(Image.open(imagenGuia))
+          img_guia=cv2.rotate(img_guia, cv2.ROTATE_90_COUNTERCLOCKWISE)
+          alpha_guia= np.array(Image.open(imagenGuiaAlpha))
+          img_overlay = img_guia[:, :, :3]
+          img_overlay = cv2.cvtColor(img_guia, cv2.COLOR_BGR2RGB)
+          put_img.overlay_image_alpha(img_result, img_overlay, 50, 240, alpha_guia)
+
         # end = time.time()
         # totalTime = end-start
         # fps = 1 / totalTime

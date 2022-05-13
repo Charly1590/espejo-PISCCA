@@ -21,7 +21,7 @@ class prevencion_nina():
           return_action=True
 
   def actividad():
-    mp_drawing = mp.solutions.drawing_utils
+    #mp_drawing = mp.solutions.drawing_utils
 
     #Banderas globales
     global return_action
@@ -71,25 +71,14 @@ class prevencion_nina():
     #Creacion de Alpha
     alpha_mask_focus2= img_focus2[:, :, 3] / 255.0
 
-    img_garra = np.array(Image.open("recursos/edsex/manogarra.png"))
+    img_garra = np.array(Image.open("recursos/edsex/Sombra.png"))
     img_garra=cv2.rotate(img_garra, cv2.ROTATE_90_COUNTERCLOCKWISE)
     #Creacion de Alpha
     alpha_mask_garra= img_garra[:, :, 3] / 255.0
 
-
-
-
-
-
     #Atras
     img_return = np.array(Image.open("recursos/autoc/cepilladodientes/volver.png"))
     img_return=cv2.rotate(img_return, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    
-
-        
-        
-      
-
 
     with mp_pose.Pose(
       
@@ -136,7 +125,7 @@ class prevencion_nina():
 
 
             #Esta linea se encarga de dibujar el esqueleto sobre la persona 
-            mp_drawing.draw_landmarks(img_result, results2.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            #mp_drawing.draw_landmarks(img_result, results2.pose_landmarks, mp_pose.POSE_CONNECTIONS)
             
 
 
@@ -248,8 +237,8 @@ class prevencion_nina():
                 alerta=True
 
             else:
-              #actividadActual = random.randint(1, 3)
-              actividadActual = 3
+              actividadActual = random.randint(1, 3)
+              #actividadActual = 1
             
 
 
@@ -308,7 +297,7 @@ class prevencion_nina():
               cicloanim-=0.03
               posianim+=3
 
-            print(cicloanim)
+            #print(cicloanim)
 
             if alerta==True:
               #Posicion "No Tocar"
@@ -341,11 +330,11 @@ class prevencion_nina():
 
               
               #Dibujar rectangulo de "No tocar"
-              start_jabon = (xn, yn) 
-              end_jabon = (xnf, ynf)
-              color = (255, 0, 255) 
-              thickness = 2
-              img_result = cv2.rectangle(img_result, start_jabon, end_jabon, color, thickness)
+              # start_jabon = (xn, yn) 
+              # end_jabon = (xnf, ynf)
+              # color = (255, 0, 255) 
+              # thickness = 2
+              # img_result = cv2.rectangle(img_result, start_jabon, end_jabon, color, thickness)
 
               if (xl>=xn and xl<=xnf) and (yl>=yn and yl<=ynf):
                 actividadActual = 0

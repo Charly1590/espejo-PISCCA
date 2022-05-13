@@ -90,8 +90,6 @@ class menus():
             if (x>=600 and x<=750) and (y>=30 and y<=140):
                 menus.menu_principal()
 
-
-
     def menu_principal():
         img_result=put_img.put_image_in_any_position(150, 130, menus.img, "recursos/menu/btnAutoc.png")
         img_result=put_img.put_image_in_any_position(150, 700, img_result, "recursos/menu/BtnEdSex.png")
@@ -133,7 +131,7 @@ class menus():
         img_result=put_img.put_image_in_any_position(150, 700, img_result, "recursos/menu/niño.png")
         img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/return.png")
         cv2.imshow('image',img_result)
-        cv2.setMouseCallback('image', menus.click_event_menu_autocuidado)
+        cv2.setMouseCallback('image', menus.click_event_menu_seleccion_genero)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

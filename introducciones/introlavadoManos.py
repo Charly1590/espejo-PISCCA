@@ -8,6 +8,8 @@ import random
 
 from threading import Thread
 from playsound import playsound
+import time
+from pygame import mixer
 
 class introduccion_lavado_manos():
   
@@ -59,70 +61,78 @@ class introduccion_lavado_manos():
     secar_manos_thread=None
 
     img_result=None
+
+    mixer.init() 
+    t_fin=0
     while 3==3:
 
+        t_ini=time.time()
         try:
 
           if introduccion:
               cv2.imshow('image3', img)
               cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
-              introduccion_thread = Thread(target=playsound, args=("recursos/audios/lavadoDientes/inicio.mp3",))
-              introduccion_thread.start()
+              mixer.music.load('recursos/audios/lavadoManos/inicio.ogg')
+              mixer.music.play()
               introduccion=False
 
-          if not introduccion:
-            if not introduccion_thread.is_alive():
-              if primera_indicacion: 
-                cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
-                primera_indicacion_thread = Thread(target=playsound, args=("recursos/audios/lavadoDientes/indicacionInicial.mp3",))
-                primera_indicacion_thread.start()
-                primera_indicacion=False
+          if not introduccion and t_fin>=6.5:
+            if primera_indicacion: 
+              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              mixer.music.load('recursos/audios/lavadoManos/indicacionInicial.ogg')
+              mixer.music.play()
+              primera_indicacion=False
+              t_fin=0
 
-              elif not primera_indicacion_thread.is_alive():
-                if mojarse_manos:
-                  img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/MojarseLasManos.png")
-                  cv2.imshow('image3', img_result)
-                  cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
-                  mojarse_manos_thread = Thread(target=playsound, args=("recursos/audios/lavadoManos/mojarseManos.mp3",))
-                  mojarse_manos_thread.start()
-                  mojarse_manos=False
+          if not primera_indicacion and t_fin>=6.5:
+            if mojarse_manos:
+              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/MojarseLasManos.png")
+              cv2.imshow('image3', img_result)
+              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              mixer.music.load('recursos/audios/lavadoManos/mojarseManos.ogg')
+              mixer.music.play()
+              mojarse_manos=False
+              t_fin=0
 
-                elif not mojarse_manos_thread.is_alive():
-                    if coger_jabon:
-                      img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/CogerJabon.png")
-                      cv2.imshow('image3', img_result)
-                      cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
-                      coger_jabon_thread = Thread(target=playsound, args=("recursos/audios/lavadoManos/cogerJabon.mp3",))
-                      coger_jabon_thread.start()
-                      coger_jabon=False
+          if not mojarse_manos and t_fin>=2.5:
+            if coger_jabon:
+              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/CogerJabon.png")
+              cv2.imshow('image3', img_result)
+              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              mixer.music.load('recursos/audios/lavadoManos/cogerJabon.ogg')
+              mixer.music.play()
+              coger_jabon=False
+              t_fin=0
 
-          
-                    elif not coger_jabon_thread.is_alive():
-                      if fregarse_manos:
-                        img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/FregarseManos.png")
-                        cv2.imshow('image3', img_result)
-                        cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
-                        fregarse_manos_thread = Thread(target=playsound, args=("recursos/audios/lavadoManos/fregarseManos.mp3",))
-                        fregarse_manos_thread.start()
-                        fregarse_manos=False
+    
+          if not coger_jabon and t_fin>=2.5:
+            if fregarse_manos:
+              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/FregarseManos.png")
+              cv2.imshow('image3', img_result)
+              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              mixer.music.load('recursos/audios/lavadoManos/fregarseManos.ogg')
+              mixer.music.play()
+              fregarse_manos=False
+              t_fin=0
 
-                      elif not fregarse_manos_thread.is_alive():
-                        if quitar_jabon:
-                          img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/QuitarJabon.png")
-                          cv2.imshow('image3', img_result)
-                          cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
-                          quitar_jabon_thread = Thread(target=playsound, args=("recursos/audios/lavadoManos/quitarJAbon.mp3",))
-                          quitar_jabon_thread.start()
-                          quitar_jabon=False
-          
-                        elif not quitar_jabon_thread.is_alive():
-                          if secar_manos:
-                            img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/SecarseManos.png")
-                            cv2.imshow('image3', img_result)
-                            cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
-                            secar_manos_thread = Thread(target=playsound, args=("recursos/audios/lavadoManos/secarManos.mp3",))
-                            secar_manos_thread.start()
-                            secar_manos=False
+          if not fregarse_manos and t_fin>=2.9:
+            if quitar_jabon:
+              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/QuitarJabon.png")
+              cv2.imshow('image3', img_result)
+              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              mixer.music.load('recursos/audios/lavadoManos/quitarJAbon.ogg')
+              mixer.music.play()
+              quitar_jabon=False
+              t_fin=0
+
+          if not quitar_jabon and t_fin>=2.5:
+            if secar_manos:
+              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/SecarseManos.png")
+              cv2.imshow('image3', img_result)
+              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              mixer.music.load('recursos/audios/lavadoManos/secarManos.ogg')
+              mixer.music.play()
+              secar_manos=False
           
 
         except Exception as e:
@@ -130,8 +140,10 @@ class introduccion_lavado_manos():
 
         try:
             if return_action or (cv2.waitKey(5) & 0xFF == 27):
+                mixer.music.stop()
                 cv2.destroyWindow('image3')
                 break
         except Exception as e:
             print(e)
-        
+
+        t_fin+=time.time()-t_ini

@@ -12,6 +12,7 @@ import threading
 
 import multiprocessing
 from playsound import playsound
+from pygame import mixer
 
 class lavado_dientes():
   
@@ -67,26 +68,28 @@ class lavado_dientes():
   def actividad():
     
     # Variable globales
+    global return_action
+    return_action=False
     cepillo_mano=False
     cepillo_mano_derecha=False
     cepillo_mano_izquierda=False
+    soundBrushin=True
+    soundCheck=True
+    pararCepillado=True
 
     pasta_mano_derecha=1
     pasta_mano_izquierda=1
     bacteria=0
-    soundBrushin=True
-    soundCheck=True
-    vectSoundsThread=[]
-    vectSoundsThreadCheck=[]
-    global return_action
-    return_action=False
 
+    mx=0
     zhand=0
     zmouth=0
-    mx=0
     my=0
     rhx=0
     rhy=0
+    
+
+    mixer.init()
 
     """
       Se pondra a la ventana en pantalla completa para evitar
@@ -238,16 +241,16 @@ class lavado_dientes():
             if (rhx>=480 and rhx<=516) and (rhy>=300 and rhy<=496):
               cepillo_mano=True
               cepillo_mano_derecha=True
-              checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
-              checkSound.start()
-              vectSoundsThreadCheck.append(checkSound)
+              mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
+              mixer.music.play()
+              
               
             if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
               cepillo_mano=True
               cepillo_mano_izquierda=True
-              checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
-              checkSound.start()
-              vectSoundsThreadCheck.append(checkSound)
+              mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
+              mixer.music.play()
+              
               
             img_result=put_img.put_elements_in_viedo(300,300,img_result,img_cepillo)
           
@@ -267,12 +270,12 @@ class lavado_dientes():
             img_result=put_img.put_elements_in_viedo(mx+7,my+50,img_result,img_bacteria5)  
             img_result2=img_result
           if bacteria>185:
-            if vectSoundsThread[0].is_alive():
-              vectSoundsThread[0].terminate()
-              soundBrushin=True
+            if pararCepillado:
+              mixer.music.stop()
+              pararCepillado=False
             if soundCheck:
-              checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
-              checkSound.start()
+              mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
+              mixer.music.play()
               soundCheck=False
             img_result=lavado_dientes.dibujar_brillos(3,img_result,mx,my)
             img_result2=img_result
@@ -304,11 +307,8 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
                 if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
                   pasta_mano_izquierda=2
-                  vectSoundsThreadCheck[0].terminate()
-                  checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
-                  checkSound.start()
-                  vectSoundsThreadCheck=[]
-                  vectSoundsThreadCheck.append(checkSound)
+                  mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
+                  mixer.music.play()
               else:
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result,img_pasta_left)
               
@@ -318,12 +318,10 @@ class lavado_dientes():
                 # cv2.putText(img_result, str(int(distance_hands)), (150, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
                 #           (255, 0, 255), 3)
                 if distance_hands>=85 and distance_hands<=200:
+                  mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
+                  mixer.music.play()
                   pasta_mano_izquierda = 3
-                  vectSoundsThreadCheck[0].terminate()
-                  checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
-                  checkSound.start()
-                  vectSoundsThreadCheck=[]
-                  vectSoundsThreadCheck.append(checkSound)
+                  
 
               if pasta_mano_izquierda == 3:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result2,img_cepilloPasta_right)
@@ -333,14 +331,11 @@ class lavado_dientes():
                     bacteria+=1
                     img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)
                     if soundBrushin:
-                      brushingSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/brushing.mp3",))
-                      brushingSound.start()
-                      vectSoundsThread=[]
-                      vectSoundsThread.append(brushingSound)
+                      mixer.music.load('recursos/autoc/cepilladodientes/brushing.ogg')
+                      mixer.music.play()
                       soundBrushin=False
-                  elif vectSoundsThread[0].is_alive():
-                    vectSoundsThread[0].terminate()
-                    vectSoundsThread=[]
+                  elif not soundBrushin:
+                    mixer.music.stop()
                     soundBrushin=True
                 except:
                   img_result=img_result
@@ -371,26 +366,19 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
                 if (rhx>=380 and rhx<=616) and (rhy>=200 and rhy<=596):
                   pasta_mano_derecha=2
-                  vectSoundsThreadCheck[0].terminate()
-                  checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
-                  checkSound.start()
-                  vectSoundsThreadCheck=[]
-                  vectSoundsThreadCheck.append(checkSound)
+                  mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
+                  mixer.music.play()
               else:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result,img_pasta_right)
           
               if pasta_mano_derecha == 2:
-
-                distance_hands=round(math.sqrt((lhx-rhx)**2+(lhy-rhy)**2),2)   
-                # cv2.putText(img_result, str(int(distance_hands)), (150, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
-                #           (255, 0, 255), 3)
+                distance_hands=round(math.sqrt((lhx-rhx)**2+(lhy-rhy)**2),2) 
                 if distance_hands>=85 and distance_hands<=200:
-                  pasta_mano_derecha = 3
-                  vectSoundsThreadCheck[0].terminate()
-                  checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/check.mp3",))
-                  checkSound.start()
-                  vectSoundsThreadCheck=[]
-                  vectSoundsThreadCheck.append(checkSound)
+                  pasta_mano_derecha=3
+                  mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
+                  mixer.music.play()
+                  
+                  
 
               if pasta_mano_derecha == 3:
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result2,img_cepilloPasta_left)
@@ -401,14 +389,11 @@ class lavado_dientes():
                     img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)
 
                     if soundBrushin:
-                        brushingSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/cepilladodientes/brushing.mp3",))
-                        brushingSound.start()
-                        vectSoundsThread=[]
-                        vectSoundsThread.append(brushingSound)
+                        mixer.music.load('recursos/autoc/cepilladodientes/brushing.ogg')
+                        mixer.music.play()
                         soundBrushin=False
-                  elif vectSoundsThread[0].is_alive():
-                    vectSoundsThread[0].terminate()
-                    vectSoundsThread=[]
+                  elif not soundBrushin:
+                    mixer.music.stop()
                     soundBrushin=True
                 except:
                   img_result=img_result
@@ -433,13 +418,7 @@ class lavado_dientes():
         
         try:
           if return_action or (cv2.waitKey(5) & 0xFF == 27):
-            try:
-              if vectSoundsThread[0].is_alive():
-                  vectSoundsThread[0].terminate()
-              if vectSoundsThreadCheck[0].is_alive():
-                  vectSoundsThreadCheck[0].terminate()
-            except Exception as e:
-              print(e)
+            mixer.music.stop()
             cv2.destroyWindow('lavado_dientes')
             break
         except Exception as e:

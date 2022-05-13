@@ -11,7 +11,6 @@ from pygame import mixer
 class introduccion_lavado_dientes():
 
   return_action=False
-  mixer.init()
 
   def click_event(event, x, y, flags, params):
     global return_action

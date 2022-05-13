@@ -8,6 +8,7 @@ import screeninfo
 import random
 import multiprocessing
 from playsound import playsound
+from pygame import mixer
 
 class lavado_manos():
 
@@ -197,7 +198,9 @@ class lavado_manos():
     img_return = np.array(Image.open("recursos/autoc/cepilladodientes/volver.png"))
     img_return=cv2.rotate(img_return, cv2.ROTATE_90_COUNTERCLOCKWISE)
     
-
+    mixer.init() 
+    t_fin=0
+    soundWashingHands=True
 
     def dibujar_brilloizq (n, img_result):
       while (n > 0):
@@ -296,14 +299,9 @@ class lavado_manos():
       min_detection_confidence=0.6,
       min_tracking_confidence=0.6,
       model_complexity=0) as pose:
-      
-
 
       while cap.isOpened():
-
-        #Sonido Check
-        checkSound = multiprocessing.Process(target=playsound, args=("recursos/autoc/lavmanos/check.mp3",))
-
+        
         #Lectura y volteado de imagen
         succes, image = cap.read()
         image=cv2.flip(image, 1)
@@ -485,7 +483,8 @@ class lavado_manos():
             put_img.overlay_image_alpha(img_result, img_overlay, xrd-35, yrd+35, alpha_mask_espuma)
 
             if sucio:
-              checkSound.start()
+              mixer.music.load('recursos/autoc/lavmanos/check.ogg')
+              mixer.music.play()
 
             aguader=False
             aguaizq=False
@@ -519,7 +518,8 @@ class lavado_manos():
               
 
             if aguader and aguaizq and paso1:
-              checkSound.start()
+              mixer.music.load('recursos/autoc/lavmanos/check.ogg')
+              mixer.music.play()
               imagenGuia="recursos/autoc/lavmanos/CogerJabon.png"
               imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/CogerJabon.png"
               paso1=False
@@ -542,12 +542,20 @@ class lavado_manos():
             if (xr>=xg and xr<=xgf) and (yr>=yg  and yr<=ygf) and (xl>=xg and xl<=xgf) and (yl>=yg  and yl<=ygf) and sucio ==False:
               cont_bact = cont_bact -1
               dibujar_gotas(12,img_result)
+              if soundWashingHands:
+                mixer.music.load('recursos/autoc/lavmanos/washing-hands.ogg')
+                mixer.music.play()
+                soundWashingHands=False
               if cont_bact < 5:
                 imagenGuia="recursos/autoc/lavmanos/SecarseManos.png"
                 imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/SecarseManos.png"
-                checkSound.start()
+                mixer.music.load('recursos/autoc/lavmanos/check.ogg')
+                mixer.music.play()
                 paso4=True
                 paso3=False
+            elif not soundWashingHands:
+              mixer.music.stop()
+              soundWashingHands=True
                 
 
           
@@ -581,7 +589,8 @@ class lavado_manos():
                 espuma=True
                 imagenGuia="recursos/autoc/lavmanos/FregarseManos.png"
                 imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/FregarseManos.png"
-                checkSound.start()
+                mixer.music.load('recursos/autoc/lavmanos/check.ogg')
+                mixer.music.play()
 
               elif ((xr>=xj and xr<=xjf) and (yr>=yj  and yr<=yjf)& aguader & aguaizq):
                 
@@ -591,7 +600,8 @@ class lavado_manos():
                 espuma=True
                 imagenGuia="recursos/autoc/lavmanos/FregarseManos.png"
                 imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/FregarseManos.png"
-                checkSound.start()
+                mixer.music.load('recursos/autoc/lavmanos/check.ogg')
+                mixer.music.play()
             
             
             #Tamaño de la imagen (Uso solo para ver el rectangulo)
@@ -653,7 +663,8 @@ class lavado_manos():
 
 
             if brilloder and brilloizq:
-              checkSound.start()
+              mixer.music.load('recursos/autoc/lavmanos/check.ogg')
+              mixer.music.play()
               paso4=False
 
 
@@ -737,6 +748,7 @@ class lavado_manos():
         #Tecla de salida ESC
         try:
           if return_action or (cv2.waitKey(5) & 0xFF == 27):
+            mixer.music.stop()
             cv2.destroyWindow('lavado_manos')
             break
         except Exception as e:

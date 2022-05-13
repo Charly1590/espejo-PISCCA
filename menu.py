@@ -109,7 +109,7 @@ class menus():
         cv2.destroyAllWindows()
     
     def menu_cepillado_dientes():
-        img_result=put_img.put_image_in_any_position(55, 130, menus.img, "recursos/menu/ImgMenu1.png")
+        img_result=put_img.put_image_in_any_position(55, 230, menus.img, "recursos/menu/btnintro.png")
         img_result=put_img.put_image_in_any_position(55, 700, img_result, "recursos/menu/ImgMenu1.png")
         img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/volver.png")
         cv2.imshow('image',img_result)
@@ -118,7 +118,7 @@ class menus():
         cv2.destroyAllWindows()
 
     def menu_lavado_manos():
-        img_result=put_img.put_image_in_any_position(55, 130, menus.img, "recursos/menu/ImgMenu1.png")
+        img_result=put_img.put_image_in_any_position(55, 230, menus.img, "recursos/menu/btnintro.png")
         img_result=put_img.put_image_in_any_position(55, 700, img_result, "recursos/menu/ImgMenu1.png")
         img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/volver.png")
         cv2.imshow('image',img_result)

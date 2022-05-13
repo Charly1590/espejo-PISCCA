@@ -229,6 +229,7 @@ class lavado_dientes():
           # cv2.putText(img_result, str(zmouth), (mx, my), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
           #               (255, 0, 255), 3)
 
+          # se grafica el cepillo a para tomarlo
           if cepillo_mano == False:
             l_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].x*image_width)
             l_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].y*image_height)
@@ -281,6 +282,7 @@ class lavado_dientes():
             img_result2=img_result
 
           if bacteria<=185:  
+            
             if cepillo_mano_derecha:
               r_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].x*image_width)
               r_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].y*image_height)
@@ -303,6 +305,7 @@ class lavado_dientes():
               lhx-=100
               lhy-=60
 
+              # se grafica la pasta para tomarla
               if pasta_mano_izquierda == 1:
                 img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
                 if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
@@ -312,8 +315,8 @@ class lavado_dientes():
               else:
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result,img_pasta_left)
               
+              
               if pasta_mano_izquierda == 2:
-
                 distance_hands=round(math.sqrt((lhx-rhx)**2+(lhy-rhy)**2),2)   
                 # cv2.putText(img_result, str(int(distance_hands)), (150, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
                 #           (255, 0, 255), 3)
@@ -322,11 +325,12 @@ class lavado_dientes():
                   mixer.music.play()
                   pasta_mano_izquierda = 3
                   
-
+              # se grafica el cepillo con pasta
               if pasta_mano_izquierda == 3:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result2,img_cepilloPasta_right)
                 diferencia_en_x=mx-rhx
                 try:
+                  # se grafica las burbujas del cepillado
                   if distance_mouth_hand >= 80 and distance_mouth_hand <= 200 and diferencia_en_x>=-105 and diferencia_en_x<=105:
                     bacteria+=1
                     img_result=lavado_dientes.dibujar_burbujas(7,img_result,mx,my)

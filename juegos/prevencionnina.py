@@ -28,6 +28,9 @@ class prevencion_nina():
     return_action=False
     
     
+    animdir=False
+    cicloanim=1.0
+    posianim=0
     manodist= -1200
     actividadActual=0
     alerta=False
@@ -45,7 +48,7 @@ class prevencion_nina():
 
 
     #Captura de Video
-    cap = cv2.VideoCapture(2)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH,1360)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT,768)
@@ -75,11 +78,6 @@ class prevencion_nina():
 
 
 
-    #"No Tocar" 
-    img_notoc = np.array(Image.open("recursos/edsex/Manono.png"))
-    img_notoc=cv2.rotate(img_notoc, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    #Alpha
-    alpha_mask_notoc= img_notoc[:, :, 3] / 255.0
 
 
 
@@ -250,8 +248,8 @@ class prevencion_nina():
                 alerta=True
 
             else:
-              actividadActual = random.randint(1, 3)
-              #actividadActual = 3
+              #actividadActual = random.randint(1, 3)
+              actividadActual = 3
             
 
 
@@ -297,9 +295,20 @@ class prevencion_nina():
             yr=int(yr)
 
 
-            if 
+            #Creacion de la animacion de llamado de atencion 
+            if cicloanim >= 1.0:
+              animdir=False
+            elif cicloanim <= 0.86:
+              animdir=True
 
+            if animdir:
+              cicloanim+=0.03
+              posianim-=3
+            else:
+              cicloanim-=0.03
+              posianim+=3
 
+            print(cicloanim)
 
             if alerta==True:
               #Posicion "No Tocar"
@@ -309,9 +318,17 @@ class prevencion_nina():
               xnf=xn+229
               ynf=yn+200
               
+
+
+              #"No Tocar" 
+              img_notoc = np.array(Image.open("recursos/edsex/Manono.png"))
+              img_notoc=cv2.rotate(img_notoc, cv2.ROTATE_90_COUNTERCLOCKWISE)
+              #Alpha
+              alpha_mask_notoc= img_notoc[:, :, 3] / 255.0
+
               #Dibujado de "No tocar"
-              img_notoc = cv2.resize(img_notoc, (229, 200) , interpolation= cv2.INTER_LINEAR)
-              alpha_mask_notoc = cv2.resize(alpha_mask_notoc, (229, 200) , interpolation= cv2.INTER_LINEAR)
+              img_notoc = cv2.resize(img_notoc, (int(229*cicloanim), int(200*cicloanim)) , interpolation= cv2.INTER_LINEAR)
+              alpha_mask_notoc = cv2.resize(alpha_mask_notoc, (int(229*cicloanim), int(200*cicloanim)) , interpolation= cv2.INTER_LINEAR)
               
               
               
@@ -319,7 +336,7 @@ class prevencion_nina():
               img_overlay = img_notoc[:, :, :3]
               img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
               
-              put_img.overlay_image_alpha(img_result, img_overlay, xn, yn, alpha_mask_notoc)
+              put_img.overlay_image_alpha(img_result, img_overlay, xn+posianim, yn+posianim, alpha_mask_notoc)
 
 
               

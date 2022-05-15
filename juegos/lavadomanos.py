@@ -43,6 +43,18 @@ class lavado_manos():
     paso3=False
     paso4=False
 
+    showtuto=False
+
+    narrapaso0=True
+    narrapaso1=False
+    narrapaso2=False
+    narrapaso3=False
+    narrapaso4=False
+    narrapaso5=False
+    narrapaso6=False
+
+    t_fin=0
+
     #Esta es la imagen que se muestra como guia durante el lavado de manos y su alpha
     imagenGuia="recursos/autoc/lavmanos/MojarseLasManos.png"
     imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/MojarseLasManos.png"
@@ -289,8 +301,9 @@ class lavado_manos():
         
         n= n-1
         
-        
-      
+    #Saludo inicial
+    mixer.music.load('recursos/audios/lavadoManos/inicio.ogg')
+    mixer.music.play()
 
 
     with mp_pose.Pose(
@@ -302,6 +315,54 @@ class lavado_manos():
 
       while cap.isOpened():
         
+
+        t_ini=time.time()
+
+        #Narrado de Pasos
+        if narrapaso0 and t_fin>=6.5:
+          mixer.music.load('recursos/audios/lavadoManos/indicacionInicial.ogg')
+          mixer.music.play()
+          narrapaso0=False
+          narrapaso1=True
+          t_fin=0
+
+        if narrapaso1 and t_fin>=6.5:
+          mixer.music.load('recursos/audios/lavadoManos/mojarseManos.ogg')
+          mixer.music.play()
+          showtuto=True
+          narrapaso1=False
+          t_fin=0
+
+        if narrapaso2 and t_fin>=1.0:
+          mixer.music.load('recursos/audios/lavadoManos/cogerJabon.ogg')
+          mixer.music.play()
+          narrapaso2=False
+          t_fin=0
+
+        if narrapaso3 and t_fin>=1.0:
+          mixer.music.load('recursos/audios/lavadoManos/fregarseManos.ogg')
+          mixer.music.play()
+          narrapaso3=False
+          t_fin=0
+
+        if narrapaso4 and t_fin>=1.0:
+          mixer.music.load('recursos/audios/lavadoManos/quitarJAbon.ogg')
+          mixer.music.play()
+          narrapaso4=False
+          t_fin=0
+
+        if narrapaso5 and t_fin>=1.0:
+          mixer.music.load('recursos/audios/lavadoManos/secarManos.ogg')
+          mixer.music.play()
+          narrapaso5=False
+          t_fin=0
+
+        if narrapaso6 and t_fin>=1.0:
+          mixer.music.load('recursos/audios/lavadoManos/manosLimpias.ogg')
+          mixer.music.play()
+          narrapaso6=False
+          
+
         #Lectura y volteado de imagen
         succes, image = cap.read()
         image=cv2.flip(image, 1)
@@ -510,20 +571,22 @@ class lavado_manos():
             ygf=yg+270
 
             #Agua control
-            if (xl>=xg and xl<=xgf) and (yl>=yg  and yl<=ygf):
+            if (xl>=xg and xl<=xgf) and (yl>=yg  and yl<=ygf) and narrapaso1==False and narrapaso0==False and t_fin>=3.5:
               aguader=True
 
-            if (xr>=xg and xr<=xgf) and (yr>=yg  and yr<=ygf):
+            if (xr>=xg and xr<=xgf) and (yr>=yg  and yr<=ygf) and narrapaso1==False and narrapaso0==False and t_fin>=3.5:
               aguaizq=True
               
 
             if aguader and aguaizq and paso1:
+              t_fin=0
               mixer.music.load('recursos/autoc/lavmanos/check.ogg')
               mixer.music.play()
               imagenGuia="recursos/autoc/lavmanos/CogerJabon.png"
               imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/CogerJabon.png"
               paso1=False
               paso2=True
+              narrapaso2=True
 
             #Dibujado y pocicionado del grifo 
             img_overlay = img_grifo[:, :, :3]
@@ -539,7 +602,7 @@ class lavado_manos():
 
           if paso3:
             #Control del lavado de manos    
-            if (xr>=xg and xr<=xgf) and (yr>=yg  and yr<=ygf) and (xl>=xg and xl<=xgf) and (yl>=yg  and yl<=ygf) and sucio ==False:
+            if (xr>=xg and xr<=xgf) and (yr>=yg  and yr<=ygf) and (xl>=xg and xl<=xgf) and (yl>=yg  and yl<=ygf) and sucio ==False and t_fin>=3.5 and narrapaso4==False:
               cont_bact = cont_bact -1
               dibujar_gotas(12,img_result)
               if soundWashingHands:
@@ -553,6 +616,8 @@ class lavado_manos():
                 mixer.music.play()
                 paso4=True
                 paso3=False
+                narrapaso5=True
+                t_fin=0
             elif not soundWashingHands:
               mixer.music.stop()
               soundWashingHands=True
@@ -582,7 +647,7 @@ class lavado_manos():
               yjf = yj+200
 
               # 'Hitbox' del jabon 
-              if ((xl>=xj and xl<=xjf) and (yl>=yj  and yl<=yjf) & aguader & aguaizq):
+              if ((xl>=xj and xl<=xjf) and (yl>=yj  and yl<=yjf) & aguader & aguaizq and t_fin>=3.5 and narrapaso2==False):
                 
                 
                 jabMano=True
@@ -591,8 +656,10 @@ class lavado_manos():
                 imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/FregarseManos.png"
                 mixer.music.load('recursos/autoc/lavmanos/check.ogg')
                 mixer.music.play()
+                narrapaso3=True
+                t_fin=0
 
-              elif ((xr>=xj and xr<=xjf) and (yr>=yj  and yr<=yjf)& aguader & aguaizq):
+              elif ((xr>=xj and xr<=xjf) and (yr>=yj  and yr<=yjf)& aguader & aguaizq and t_fin>=3.5 and narrapaso2==False):
                 
                 
                 jabMano=True
@@ -602,6 +669,8 @@ class lavado_manos():
                 imagenGuiaAlpha="recursos/autoc/lavmanos/Alphas/FregarseManos.png"
                 mixer.music.load('recursos/autoc/lavmanos/check.ogg')
                 mixer.music.play()
+                narrapaso3=True
+                t_fin=0
             
             
             #Tamaño de la imagen (Uso solo para ver el rectangulo)
@@ -628,7 +697,7 @@ class lavado_manos():
 
 
           if(espuma):
-            if (xl+170>=xr and xl-150<=xr) and (yl+170>=yr  and yl-150<=yr):
+            if (xl+170>=xr and xl-150<=xr) and (yl+170>=yr  and yl-150<=yr) and t_fin>=3.5 and narrapaso3==False :
               dibujar_burbujas(12,img_result)
               #Registro del tiempo para que desaparescan las bacterias
               if cont_bact < 65 :
@@ -639,6 +708,8 @@ class lavado_manos():
                 paso3=True
                 paso2=False
                 espuma=False
+                narrapaso4=True
+                t_fin=0
                 
 
 
@@ -651,12 +722,12 @@ class lavado_manos():
             xtf=xt+275
             ytf=yt+250
             #Toalla control y brillo
-            if (xl>=xt and xl<=xtf) and (yl>=yt  and yl<=ytf):
+            if (xl>=xt and xl<=xtf) and (yl>=yt  and yl<=ytf) and t_fin>=3.5 and narrapaso5==False:
               aguader=False
               if sucio == False:
                 brilloder = True
 
-            if (xr>=xt and xr<=xtf) and (yr>=yt  and yr<=ytf):
+            if (xr>=xt and xr<=xtf) and (yr>=yt  and yr<=ytf) and t_fin>=3.5 and narrapaso5==False:
               aguaizq=False
               if sucio == False:
                 brilloizq = True
@@ -666,7 +737,8 @@ class lavado_manos():
               mixer.music.load('recursos/autoc/lavmanos/check.ogg')
               mixer.music.play()
               paso4=False
-
+              narrapaso6=True
+              t_fin=0
 
             #Dibujado y pocicionado de la Toalla
             img_overlay = img_toalla[:, :, :3]
@@ -708,14 +780,17 @@ class lavado_manos():
             dibujar_brilloder(6,img_result)
 
 
+         
+
 
           #Dibujado y pocicionado de los pictogramas Guia (Estos cambian progresivamente)
-          img_guia = np.array(Image.open(imagenGuia))
-          img_guia=cv2.rotate(img_guia, cv2.ROTATE_90_COUNTERCLOCKWISE)
-          alpha_guia= np.array(Image.open(imagenGuiaAlpha))
-          img_overlay = img_guia[:, :, :3]
-          img_overlay = cv2.cvtColor(img_guia, cv2.COLOR_BGR2RGB)
-          put_img.overlay_image_alpha(img_result, img_overlay, 50, 240, alpha_guia)
+          if showtuto:
+            img_guia = np.array(Image.open(imagenGuia))
+            img_guia=cv2.rotate(img_guia, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            alpha_guia= np.array(Image.open(imagenGuiaAlpha))
+            img_overlay = img_guia[:, :, :3]
+            img_overlay = cv2.cvtColor(img_guia, cv2.COLOR_BGR2RGB)
+            put_img.overlay_image_alpha(img_result, img_overlay, 50, 240, alpha_guia)
 
 
 
@@ -753,5 +828,7 @@ class lavado_manos():
             break
         except Exception as e:
           print(e)
+
+        t_fin+=time.time()-t_ini
 
     cap.release()

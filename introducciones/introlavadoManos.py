@@ -162,7 +162,8 @@ class introduccion_lavado_manos():
 
         try:
             if return_action or (cv2.waitKey(5) & 0xFF == 27):
-                mixer.music.stop()
+                mixer.music.load('recursos/audios/Bubble.ogg')
+                mixer.music.play()
                 cv2.destroyWindow('image3')
                 break
         except Exception as e:

@@ -87,6 +87,8 @@ class lavado_dientes():
     dientes_limpios=True
 
     t_fin=0
+    t_ini_chek=0
+    t_fin_check=0
     pasta_mano_derecha=1
     pasta_mano_izquierda=1
     bacteria=0
@@ -271,21 +273,24 @@ class lavado_dientes():
             r_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].y*image_height)
             rhx, rhy = r_hand_position_x, r_hand_position_y
 
+            #if para saber si se agarra con la mano derecha
             if (rhx>=480 and rhx<=516) and (rhy>=300 and rhy<=496) and not agarra_cepillo and t_fin>=4:
               cepillo_mano=True
               cepillo_mano_derecha=True
               mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
               mixer.music.play()
+              t_ini_check=time.time()
               #Esta es la imagen que se muestra como guia durante el cepillado de dientes y su alpha
               imagenGuia="recursos/autoc/cepilladodientes/AgarrarPasta.png"
               imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/AgarrarPasta.png"
               
-              
+            #if para saber si se agarra con la mano izquierda  
             if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496) and not agarra_cepillo and t_fin>=4:
               cepillo_mano=True
               cepillo_mano_izquierda=True
               mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
               mixer.music.play()
+              t_ini_check=time.time()
               #Esta es la imagen que se muestra como guia durante el cepillado de dientes y su alpha
               imagenGuia="recursos/autoc/cepilladodientes/AgarrarPasta.png"
               imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/AgarrarPasta.png"
@@ -312,12 +317,13 @@ class lavado_dientes():
             if soundCheck:
               mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
               mixer.music.play()
+              t_ini_check=time.time()
               soundCheck=False
-            if dientes_limpios:
-              print("ajksdhjaskhda sonido")
+            if dientes_limpios and t_fin_check>=2.5:
               mixer.music.load('recursos/audios/lavadoDientes/dientesLimpios.ogg')
               mixer.music.play()
               dientes_limpios=False
+              t_fin_check=0
             img_result=lavado_dientes.dibujar_brillos(3,img_result,mx,my)
             img_result2=img_result
 
@@ -325,11 +331,12 @@ class lavado_dientes():
             
             if cepillo_mano_derecha:
 
-              if agarra_pasta:
+              if agarra_pasta and t_fin_check>=2.5:
                 mixer.music.load('recursos/audios/lavadoDientes/aggarraLaPasta.ogg')
                 mixer.music.play()
                 agarra_pasta=False
                 t_fin=0
+                t_fin_check=0
 
               r_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].x*image_width)
               r_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_INDEX].y*image_height)
@@ -357,17 +364,19 @@ class lavado_dientes():
                   imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/PonersePasta.png"
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
+                  t_ini_check=time.time()
               else:
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result,img_pasta_left)
               
               
               if pasta_mano_izquierda == 2 and not agarra_pasta and t_fin>=3:
 
-                if poner_pasta:
+                if poner_pasta and t_fin_check>=2.5:
                     mixer.music.load('recursos/audios/lavadoDientes/ponerPastaCepillo.ogg')
                     mixer.music.play()
                     poner_pasta=False
                     t_fin=0
+                    t_fin_check=0
                 distance_hands=round(math.sqrt((lhx-rhx)**2+(lhy-rhy)**2),2)   
                 # cv2.putText(img_result, str(int(distance_hands)), (150, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.5,
                 #           (255, 0, 255), 3)
@@ -377,13 +386,14 @@ class lavado_dientes():
                   imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/Cepillarse.png"
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
+                  t_ini_check=time.time()
                   pasta_mano_izquierda = 3
                   
               # se grafica el cepillo con pasta
               if pasta_mano_izquierda == 3:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result2,img_cepilloPasta_right)
                 diferencia_en_x=mx-rhx
-                if not poner_pasta and t_fin>=4:
+                if not poner_pasta and t_fin>=4 and t_fin_check>=2.5:
                   if cepillarse_dientes:
                       mixer.music.load('recursos/audios/lavadoDientes/cepillarseDientes.ogg')
                       mixer.music.play()
@@ -417,11 +427,12 @@ class lavado_dientes():
                    
             if cepillo_mano_izquierda:
 
-              if agarra_pasta:
+              if agarra_pasta and t_fin_check>=2.5:
                 mixer.music.load('recursos/audios/lavadoDientes/aggarraLaPasta.ogg')
                 mixer.music.play()
                 agarra_pasta=False
                 t_fin=0
+                t_fin_check=0
 
               l_hand_position_x=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].x*image_width)
               l_hand_position_y=int(results2.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_INDEX].y*image_height)
@@ -451,16 +462,18 @@ class lavado_dientes():
                   pasta_mano_derecha=2
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
+                  t_ini_check=time.time()
               else:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result,img_pasta_right)
           
               if pasta_mano_derecha == 2 and not agarra_pasta and t_fin>=3:
 
-                if poner_pasta:
+                if poner_pasta and t_fin_check>=4.5:
                     mixer.music.load('recursos/audios/lavadoDientes/ponerPastaCepillo.ogg')
                     mixer.music.play()
                     poner_pasta=False
                     t_fin=0
+                    t_fin_check=0
 
                 distance_hands=round(math.sqrt((lhx-rhx)**2+(lhy-rhy)**2),2) 
                 if distance_hands>=85 and distance_hands<=200:
@@ -469,6 +482,7 @@ class lavado_dientes():
                   imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/Cepillarse.png"
                   mixer.music.load('recursos/autoc/cepilladodientes/check.ogg')
                   mixer.music.play()
+                  t_ini_check=time.time()
                   
                   
 
@@ -476,7 +490,7 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result2,img_cepilloPasta_left)
                 diferencia_en_x=mx-lhx
 
-                if not poner_pasta and t_fin>=4:
+                if not poner_pasta and t_fin>=4 and t_fin_check>=5.5:
                   if cepillarse_dientes:
                       mixer.music.load('recursos/audios/lavadoDientes/cepillarseDientes.ogg')
                       mixer.music.play()
@@ -535,13 +549,20 @@ class lavado_dientes():
         
         try:
           if return_action or (cv2.waitKey(5) & 0xFF == 27):
-            mixer.music.stop()
+            mixer.music.load('recursos/audios/Bubble.ogg')
+            mixer.music.play()
             cv2.destroyWindow('lavado_dientes')
             break
         except Exception as e:
           print(e)
         
         t_fin+=time.time()-t_ini
+        try:
+          t_fin_check+=time.time()-t_ini_check
+          print(t_fin_check)
+        except Exception as e:
+          print(e)
+
         
         
     cap.release()

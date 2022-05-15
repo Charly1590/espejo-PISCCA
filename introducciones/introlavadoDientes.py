@@ -56,13 +56,14 @@ class introduccion_lavado_dientes():
 
     mixer.init() 
     t_fin=0
-    
+    img_result=None
     while 3==3:
         t_ini=time.time()
         try:
 
           if introduccion:
-              cv2.imshow('image2', img)
+              img_result=put_img.put_image_in_any_position(50, 280, img, "recursos/personajes/Doctora.png")
+              cv2.imshow('image2', img_result)
               cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
               mixer.music.load('recursos/audios/lavadoDientes/inicio.ogg')
               mixer.music.play()

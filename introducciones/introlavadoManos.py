@@ -50,15 +50,6 @@ class introduccion_lavado_manos():
     fregarse_manos=True
     quitar_jabon=True
     secar_manos=True
-    
-    
-    introduccion_thread=None
-    primera_indicacion_thread=None
-    mojarse_manos_thread=None
-    coger_jabon_thread=None
-    fregarse_manos_thread=None
-    quitar_jabon_thread=None
-    secar_manos_thread=None
 
     img_result=None
 
@@ -70,7 +61,8 @@ class introduccion_lavado_manos():
         try:
 
           if introduccion:
-              cv2.imshow('image3', img)
+              img_result=put_img.put_image_in_any_position(50, 280, img, "recursos/personajes/Doctora.png")
+              cv2.imshow('image3', img_result)
               cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
               mixer.music.load('recursos/audios/lavadoManos/inicio.ogg')
               mixer.music.play()
@@ -94,7 +86,7 @@ class introduccion_lavado_manos():
               mojarse_manos=False
               t_fin=0
 
-          if not mojarse_manos and t_fin>=2.5:
+          if not mojarse_manos and t_fin>=3.5:
             if coger_jabon:
               img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/CogerJabon.png")
               cv2.imshow('image3', img_result)
@@ -105,7 +97,7 @@ class introduccion_lavado_manos():
               t_fin=0
 
     
-          if not coger_jabon and t_fin>=2.5:
+          if not coger_jabon and t_fin>=3.5:
             if fregarse_manos:
               img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/FregarseManos.png")
               cv2.imshow('image3', img_result)
@@ -115,7 +107,7 @@ class introduccion_lavado_manos():
               fregarse_manos=False
               t_fin=0
 
-          if not fregarse_manos and t_fin>=2.9:
+          if not fregarse_manos and t_fin>=3.5:
             if quitar_jabon:
               img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/QuitarJabon.png")
               cv2.imshow('image3', img_result)
@@ -125,7 +117,7 @@ class introduccion_lavado_manos():
               quitar_jabon=False
               t_fin=0
 
-          if not quitar_jabon and t_fin>=2.5:
+          if not quitar_jabon and t_fin>=3.5:
             if secar_manos:
               img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/SecarseManos.png")
               cv2.imshow('image3', img_result)
@@ -133,8 +125,6 @@ class introduccion_lavado_manos():
               mixer.music.load('recursos/audios/lavadoManos/secarManos.ogg')
               mixer.music.play()
               secar_manos=False
-          
-
         except Exception as e:
           print(e)
 

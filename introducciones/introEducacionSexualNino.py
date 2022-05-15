@@ -11,7 +11,7 @@ from playsound import playsound
 import time
 from pygame import mixer
 
-class introduccion_introEducacionSexualNina():
+class introduccion_introEducacionSexualNino():
   
   return_action=False
 
@@ -43,16 +43,16 @@ class introduccion_introEducacionSexualNina():
 
     img = put_img.put_image_in_any_position(610, 20, img, "recursos/menu/volver.png")
 
-    img2 = put_img.put_image_in_any_position(150, 100, img, "recursos/introducciones/educacionSex/mujer/DelanteMujer.png")
+    img2 = put_img.put_image_in_any_position(150, 100, img, "recursos/introducciones/educacionSex/hombre/DelanteHombre.png")
 
-    img3 = put_img.put_image_in_any_position(150, 100, img, "recursos/introducciones/educacionSex/mujer/AtrasMujer.png")
+    img3 = put_img.put_image_in_any_position(150, 100, img, "recursos/introducciones/educacionSex/hombre/AtrasHombre.png")
 
     nadie_puede_tocar_tu_cuerpo=True
     si_alguien_toca_tu_cuerpo=True
-    partes_privada_mujer=True
+    partes_privada_hombre=True
     boca=True
-    senos=True
-    vagina=True
+    pecho=True
+    pene=True
     nalgas=True
 
     img_result=None
@@ -67,64 +67,64 @@ class introduccion_introEducacionSexualNina():
           if nadie_puede_tocar_tu_cuerpo:
               img_result=put_img.put_image_in_any_position(50, 280, img, "recursos/personajes/Doctora.png")
               cv2.imshow('image4', img_result)
-              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNina.click_event)
+              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNino.click_event)
               mixer.music.load('recursos/audios/prevencionAbusoSexual/nadiePuedeTocarTuCuerpo.ogg')
               mixer.music.play()
               nadie_puede_tocar_tu_cuerpo=False
 
           if not nadie_puede_tocar_tu_cuerpo and t_fin>=3.5:
             if si_alguien_toca_tu_cuerpo: 
-              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNina.click_event)
+              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNino.click_event)
               mixer.music.load('recursos/audios/prevencionAbusoSexual/siAlguienTocaTuCuerpoCuentaATuMama.ogg')
               mixer.music.play()
               si_alguien_toca_tu_cuerpo=False
               t_fin=0
 
           if not si_alguien_toca_tu_cuerpo and t_fin>=3.5:
-            if partes_privada_mujer:
-              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNina.click_event)
-              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesMujer/PartesPrivMujer.ogg')
+            if partes_privada_hombre:
+              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNino.click_event)
+              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesHombre/PartesPrivHombre.ogg')
               mixer.music.play()
-              partes_privada_mujer=False
+              partes_privada_hombre=False
               t_fin=0
 
-          if not partes_privada_mujer and t_fin>=4.5:
+          if not partes_privada_hombre and t_fin>=4.5:
             if boca:
-              img_result=put_img.put_image_in_any_position(350, 295, img2, "recursos/audios/prevencionAbusoSexual/partesHombre/focus2.png")
+              img_result=put_img.put_image_in_any_position(350, 260, img2, "recursos/audios/prevencionAbusoSexual/partesHombre/focus2.png")
               cv2.imshow('image4', img_result)
-              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNina.click_event)
-              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesMujer/Boca.ogg')
+              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNino.click_event)
+              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesHombre/Boca.ogg')
               mixer.music.play()
               boca=False
               t_fin=0
 
     
           if not boca and t_fin>=2.5:
-            if senos:
+            if pecho:
               img_result=put_img.put_image_in_any_position(285, 400, img2, "recursos/audios/prevencionAbusoSexual/partesHombre/focus.png")
               cv2.imshow('image4', img_result)
-              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNina.click_event)
-              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesMujer/Senos.ogg')
+              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNino.click_event)
+              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesHombre/Pecho.ogg')
               mixer.music.play()
-              senos=False
+              pecho=False
               t_fin=0
 
-          if not senos and t_fin>=3.5:
-            if vagina:
-              img_result=put_img.put_image_in_any_position(285, 680, img2, "recursos/audios/prevencionAbusoSexual/partesHombre/focus.png")
+          if not pecho and t_fin>=3.5:
+            if pene:
+              img_result=put_img.put_image_in_any_position(290, 680, img2, "recursos/audios/prevencionAbusoSexual/partesHombre/focus.png")
               cv2.imshow('image4', img_result)
-              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNina.click_event)
-              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesMujer/Vagina.ogg')
+              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNino.click_event)
+              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesHombre/Pene.ogg')
               mixer.music.play()
-              vagina=False
+              pene=False
               t_fin=0
 
-          if not vagina and t_fin>=3.5:
+          if not pene and t_fin>=3.5:
             if nalgas:
-              img_result=put_img.put_image_in_any_position(285, 700, img3, "recursos/audios/prevencionAbusoSexual/partesHombre/focus.png")
+              img_result=put_img.put_image_in_any_position(285, 670, img3, "recursos/audios/prevencionAbusoSexual/partesHombre/focus.png")
               cv2.imshow('image4', img_result)
-              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNina.click_event)
-              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesMujer/Nalgas.ogg')
+              cv2.setMouseCallback('image4', introduccion_introEducacionSexualNino.click_event)
+              mixer.music.load('recursos/audios/prevencionAbusoSexual/partesHombre/Nalgas.ogg')
               mixer.music.play()
               nalgas=False
         except Exception as e:

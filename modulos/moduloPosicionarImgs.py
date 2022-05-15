@@ -81,3 +81,38 @@ class Posicionamiento():
         Posicionamiento.overlay_image_alpha(img_result, img_overlay, x, y, alpha_mask_new_image)
         
         return img_result
+    
+    def put_image_in_any_position_with_resize(x, y, img, name, x_size, y_size):
+
+        new_image = np.array(Image.open(name))
+        alpha_mask_new_image= new_image[:, :, 3] / 255.0
+
+        new_image= cv2.resize(new_image, (x_size, y_size) , interpolation= cv2.INTER_LINEAR)
+        alpha_mask_new_image = cv2.resize(alpha_mask_new_image, (x_size, y_size) , interpolation= cv2.INTER_LINEAR)
+
+        img = np.array(img)
+
+        img_result = img[:, :, :3].copy()
+        img_overlay = new_image[:, :, :3]
+
+        img_overlay = cv2.cvtColor(img_overlay, cv2.COLOR_BGR2RGB)
+
+
+        
+
+        Posicionamiento.overlay_image_alpha(img_result, img_overlay, x, y, alpha_mask_new_image)
+        
+        return img_result
+    
+    """
+        Esta funcion se utilizara para ubicar imagenes sobre el video
+        teniendo como parametros:
+
+        - la posicion x
+        - la posicion y
+        - el frame al que queremos montar la imagen
+        - la imagen que vamos a montar
+        - El tamaño de x
+        - El tamaño de y
+
+    """

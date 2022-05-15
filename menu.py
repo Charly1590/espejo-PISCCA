@@ -100,7 +100,7 @@ class menus():
             if (x>=170 and x<=620) and (y>=720 and y<=1190):
                 prev_nina.actividad()
             if (x>=600 and x<=750) and (y>=30 and y<=140):
-                menus.menu_principal()
+                menus.menu_seleccion_sexo()
     
     def click_event_menu_educacionSexial_Nino(event, x, y, flags, params):
         if event == cv2.EVENT_LBUTTONDOWN:
@@ -110,7 +110,7 @@ class menus():
             if (x>=170 and x<=620) and (y>=720 and y<=1190):
                 prev_nina.actividad()
             if (x>=600 and x<=750) and (y>=30 and y<=140):
-                menus.menu_principal()
+                menus.menu_seleccion_sexo()
 
     def menu_principal():
         img_result=put_img.put_image_in_any_position(150, 130, menus.img, "recursos/menu/btnAutoc.png")

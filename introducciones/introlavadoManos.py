@@ -50,13 +50,23 @@ class introduccion_lavado_manos():
     fregarse_manos=True
     quitar_jabon=True
     secar_manos=True
-
     img_result=None
+
+    showtuto=False
+    cicloanim=0.4
+    posianim=0
+    imgentuto=""
 
     mixer.init() 
     t_fin=0
     while 3==3:
 
+        
+        if cicloanim <= 1.0 :
+          cicloanim+=0.06
+          posianim+=16
+          
+        
         t_ini=time.time()
         try:
 
@@ -74,23 +84,31 @@ class introduccion_lavado_manos():
               mixer.music.load('recursos/audios/lavadoManos/indicacionInicial.ogg')
               mixer.music.play()
               primera_indicacion=False
+              
               t_fin=0
 
           if not primera_indicacion and t_fin>=6.5:
+            
             if mojarse_manos:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/MojarseLasManos.png")
-              cv2.imshow('image3', img_result)
+              imgentuto = "recursos/introducciones/lavadomanos/MojarseLasManos.png"
+              showtuto=True
+              cicloanim=0.4
+              posianim=0
+
               cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
               mixer.music.load('recursos/audios/lavadoManos/mojarseManos.ogg')
               mixer.music.play()
               mojarse_manos=False
               t_fin=0
 
+
           if not mojarse_manos and t_fin>=3.5:
             if coger_jabon:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/CogerJabon.png")
-              cv2.imshow('image3', img_result)
-              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              imgentuto = "recursos/introducciones/lavadomanos/CogerJabon.png"
+              cicloanim=0.4
+              posianim=0
+              
+
               mixer.music.load('recursos/audios/lavadoManos/cogerJabon.ogg')
               mixer.music.play()
               coger_jabon=False
@@ -99,9 +117,11 @@ class introduccion_lavado_manos():
     
           if not coger_jabon and t_fin>=3.5:
             if fregarse_manos:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/FregarseManos.png")
-              cv2.imshow('image3', img_result)
-              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              imgentuto =  "recursos/introducciones/lavadomanos/FregarseManos.png"
+              cicloanim=0.4
+              posianim=0
+
+
               mixer.music.load('recursos/audios/lavadoManos/fregarseManos.ogg')
               mixer.music.play()
               fregarse_manos=False
@@ -109,9 +129,11 @@ class introduccion_lavado_manos():
 
           if not fregarse_manos and t_fin>=3.5:
             if quitar_jabon:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/QuitarJabon.png")
-              cv2.imshow('image3', img_result)
-              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              imgentuto = "recursos/introducciones/lavadomanos/QuitarJabon.png"
+              cicloanim=0.4
+              posianim=0
+
+
               mixer.music.load('recursos/audios/lavadoManos/quitarJAbon.ogg')
               mixer.music.play()
               quitar_jabon=False
@@ -119,12 +141,22 @@ class introduccion_lavado_manos():
 
           if not quitar_jabon and t_fin>=3.5:
             if secar_manos:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadomanos/SecarseManos.png")
-              cv2.imshow('image3', img_result)
-              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              imgentuto = "recursos/introducciones/lavadomanos/SecarseManos.png"
+              cicloanim=0.4
+              posianim=0
+
+
               mixer.music.load('recursos/audios/lavadoManos/secarManos.ogg')
               mixer.music.play()
               secar_manos=False
+
+
+          if showtuto:
+            img_result=put_img.put_image_in_any_position_with_resize(300-posianim, 530-posianim, img, imgentuto ,int(500*cicloanim),int(500*cicloanim))
+            cv2.imshow('image3', img_result)
+            cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+
+
         except Exception as e:
           print(e)
 

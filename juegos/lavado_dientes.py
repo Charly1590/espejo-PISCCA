@@ -296,7 +296,7 @@ class lavado_dientes():
               imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/AgarrarPasta.png"
               
               
-            img_result=put_img.put_elements_in_viedo(300,300,img_result,img_cepillo)
+            img_result=put_img.put_elements_in_viedo(350,300,img_result,img_cepillo)
           
           if bacteria<=75:
             img_result=put_img.put_elements_in_viedo(mx+10,my+10,img_result,img_bacteria1)  
@@ -357,8 +357,16 @@ class lavado_dientes():
               # se grafica la pasta para tomarla
               if pasta_mano_izquierda == 1:
 
-                img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
-                if (lhx>=480 and lhx<=516) and (lhy>=300 and lhy<=496):
+                # #Dibujar rectangulo Toalla
+                # start_agua = (350, 300) 
+                # end_agua = (516, 400)
+                # color = (0, 255, 0) 
+                # thickness = 2
+                # img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness) 
+
+
+                img_result=put_img.put_elements_in_viedo(350,300,img_result,img_pasta)
+                if (lhx>=350 and lhx<=516) and (lhy>=300 and lhy<=400):
                   pasta_mano_izquierda=2
                   imagenGuia="recursos/autoc/cepilladodientes/PonersePasta.png"
                   imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/PonersePasta.png"
@@ -369,9 +377,9 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result,img_pasta_left)
               
               
-              if pasta_mano_izquierda == 2 and not agarra_pasta and t_fin>=3:
+              if pasta_mano_izquierda == 2 and not agarra_pasta and t_fin>=4 and t_fin_check>=2.5:
 
-                if poner_pasta and t_fin_check>=2.5:
+                if poner_pasta and t_fin_check>=4.5:
                     mixer.music.load('recursos/audios/lavadoDientes/ponerPastaCepillo.ogg')
                     mixer.music.play()
                     poner_pasta=False
@@ -393,7 +401,7 @@ class lavado_dientes():
               if pasta_mano_izquierda == 3:
                 img_result=put_img.put_elements_in_viedo(rhx,rhy,img_result2,img_cepilloPasta_right)
                 diferencia_en_x=mx-rhx
-                if not poner_pasta and t_fin>=4 and t_fin_check>=2.5:
+                if not poner_pasta and t_fin>=4 and t_fin_check>=3.5:
                   if cepillarse_dientes:
                       mixer.music.load('recursos/audios/lavadoDientes/cepillarseDientes.ogg')
                       mixer.music.play()
@@ -454,8 +462,17 @@ class lavado_dientes():
               rhy-=60
 
               if pasta_mano_derecha == 1:
-                img_result=put_img.put_elements_in_viedo(300,300,img_result,img_pasta)
-                if (rhx>=380 and rhx<=616) and (rhy>=200 and rhy<=596):
+                img_result=put_img.put_elements_in_viedo(350,300,img_result,img_pasta)
+
+                #Dibujar rectangulo Toalla
+                # start_agua = (350, 300) 
+                # end_agua = (500, 400)
+                # color = (0, 255, 0) 
+                # thickness = 2
+                # img_result = cv2.rectangle(img_result, start_agua, end_agua, color, thickness) 
+
+
+                if (rhx>=350 and rhx<=500) and (rhy>=300 and rhy<=400):
                   
                   imagenGuia="recursos/autoc/cepilladodientes/PonersePasta.png"
                   imagenGuiaAlpha="recursos/autoc/cepilladodientes/Alphas/PonersePasta.png"
@@ -468,7 +485,7 @@ class lavado_dientes():
           
               if pasta_mano_derecha == 2 and not agarra_pasta and t_fin>=3:
 
-                if poner_pasta and t_fin_check>=4.5:
+                if poner_pasta and t_fin>=4 and t_fin_check>=3.5:
                     mixer.music.load('recursos/audios/lavadoDientes/ponerPastaCepillo.ogg')
                     mixer.music.play()
                     poner_pasta=False

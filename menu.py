@@ -116,6 +116,8 @@ class menus():
                 mixer.music.play()
                 menus.menu_educacionSexial_Nino()
             if (x>=600 and x<=750) and (y>=30 and y<=140):
+                mixer.music.load('recursos/audios/Bubble.ogg')
+                mixer.music.play()
                 menus.menu_principal()
 
     def click_event_menu_educacionSexial_Nina(event, x, y, flags, params):

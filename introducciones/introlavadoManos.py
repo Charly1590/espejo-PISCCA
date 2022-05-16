@@ -94,8 +94,7 @@ class introduccion_lavado_manos():
               showtuto=True
               cicloanim=0.4
               posianim=0
-
-              cv2.setMouseCallback('image3', introduccion_lavado_manos.click_event)
+              
               mixer.music.load('recursos/audios/lavadoManos/mojarseManos.ogg')
               mixer.music.play()
               mojarse_manos=False

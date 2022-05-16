@@ -639,7 +639,7 @@ class lavado_manos():
                 yj = yl-100
 
             else:
-              xj = 350
+              xj = 380
               yj = 260 
 
               #Tamaño de la imagen

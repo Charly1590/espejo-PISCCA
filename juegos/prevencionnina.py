@@ -301,7 +301,7 @@ class prevencion_nina():
 
             if alerta==True:
               #Posicion "No Tocar"
-              xn=170
+              xn=240
               yn=400
               #Tamaño de la imagen
               xnf=xn+229

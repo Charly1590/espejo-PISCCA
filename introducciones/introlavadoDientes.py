@@ -54,11 +54,24 @@ class introduccion_lavado_dientes():
     cepillarse_dientes=True
     arriba_abajo=True
 
+
+
+    showtuto=False
+    cicloanim=0.4
+    posianim=0
+    imgentuto=""
+
+
     mixer.init() 
     t_fin=0
     img_result=None
     while 3==3:
         t_ini=time.time()
+
+        if cicloanim <= 1.0 :
+          cicloanim+=0.06
+          posianim+=16
+
         try:
 
           if introduccion:
@@ -79,9 +92,10 @@ class introduccion_lavado_dientes():
 
           if not primera_indicacion and t_fin>=6.5:
             if agarra_cepillo:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/CogerCepillo.png")
-              cv2.imshow('image2', img_result)
-              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+              imgentuto =  "recursos/introducciones/lavadodientes/CogerCepillo.png"
+              showtuto=True
+              cicloanim=0.4
+              posianim=0
               mixer.music.load('recursos/audios/lavadoDientes/cogerCepillo.ogg')
               mixer.music.play()
               agarra_cepillo=False
@@ -89,9 +103,9 @@ class introduccion_lavado_dientes():
 
           if not agarra_cepillo and t_fin>=4:
             if agarra_pasta:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/AgarrarPasta.png")
-              cv2.imshow('image2', img_result)
-              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+              imgentuto =  "recursos/introducciones/lavadodientes/AgarrarPasta.png"
+              cicloanim=0.4
+              posianim=0
               mixer.music.load('recursos/audios/lavadoDientes/aggarraLaPasta.ogg')
               mixer.music.play()
               agarra_pasta=False
@@ -99,9 +113,9 @@ class introduccion_lavado_dientes():
 
           if not agarra_pasta and t_fin>=3:
             if poner_pasta:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/PonersePasta.png")
-              cv2.imshow('image2', img_result)
-              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+              imgentuto = "recursos/introducciones/lavadodientes/PonersePasta.png"
+              cicloanim=0.4
+              posianim=0
               mixer.music.load('recursos/audios/lavadoDientes/ponerPastaCepillo.ogg')
               mixer.music.play()
               poner_pasta=False
@@ -109,9 +123,9 @@ class introduccion_lavado_dientes():
 
           if not poner_pasta and t_fin>=4:
             if cepillarse_dientes:
-              img_result=put_img.put_image_in_any_position(150, 380, img, "recursos/introducciones/lavadodientes/lavarseDientes.png")
-              cv2.imshow('image2', img_result)
-              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+              imgentuto = "recursos/introducciones/lavadodientes/lavarseDientes.png"
+              cicloanim=0.4
+              posianim=0
               mixer.music.load('recursos/audios/lavadoDientes/cepillarseDientes.ogg')
               mixer.music.play()
               cepillarse_dientes=False
@@ -119,11 +133,16 @@ class introduccion_lavado_dientes():
 
           if not cepillarse_dientes and t_fin>=3:
             if arriba_abajo:
-              cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
+              
               mixer.music.load('recursos/audios/lavadoDientes/arribaAbajoCepillado.ogg')
               mixer.music.play()
               arriba_abajo=False
               t_fin=0
+
+          if showtuto:
+            img_result=put_img.put_image_in_any_position_with_resize(300-posianim, 530-posianim, img, imgentuto ,int(500*cicloanim),int(500*cicloanim))
+            cv2.imshow('image2', img_result)
+            cv2.setMouseCallback('image2', introduccion_lavado_dientes.click_event)
 
         except Exception as e:
           print(e)

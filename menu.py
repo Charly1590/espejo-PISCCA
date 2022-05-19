@@ -110,17 +110,17 @@ class menus():
             if (x>=170 and x<=620) and (y>=150 and y<=620):
                 mixer.music.load('recursos/audios/Bubble.ogg')
                 mixer.music.play()
-                menus.menu_educacionSexial_Nina()
+                menus.menu_educacionSexual_Nina()
             if (x>=170 and x<=620) and (y>=720 and y<=1190):
                 mixer.music.load('recursos/audios/Bubble.ogg')
                 mixer.music.play()
-                menus.menu_educacionSexial_Nino()
+                menus.menu_educacionSexual_Nino()
             if (x>=600 and x<=750) and (y>=30 and y<=140):
                 mixer.music.load('recursos/audios/Bubble.ogg')
                 mixer.music.play()
                 menus.menu_principal()
 
-    def click_event_menu_educacionSexial_Nina(event, x, y, flags, params):
+    def click_event_menu_educacionSexual_Nina(event, x, y, flags, params):
         if event == cv2.EVENT_LBUTTONDOWN:
             print(x," ",y, "SELECCION_GENERO")
             if (x>=170 and x<=620) and (y>=150 and y<=620):
@@ -136,7 +136,7 @@ class menus():
                 mixer.music.play()
                 menus.menu_seleccion_sexo()
     
-    def click_event_menu_educacionSexial_Nino(event, x, y, flags, params):
+    def click_event_menu_educacionSexual_Nino(event, x, y, flags, params):
         if event == cv2.EVENT_LBUTTONDOWN:
             print(x," ",y, "SELECCION_GENERO")
             if (x>=170 and x<=620) and (y>=150 and y<=620):
@@ -166,7 +166,7 @@ class menus():
         cv2.imshow('image',img_result)
         cv2.setMouseCallback('image', menus.click_event_menu_principal)
         cv2.waitKey(0)
-        cv2.destroyAllWiclick_event_menu_educacionSexial_Ninandows()
+        cv2.destroyAllWiclick_event_menu_educacionSexual_Ninandows()
 
     def menu_autocuidado():
         img_result=put_img.put_image_in_any_position(150, 130, menus.img, "recursos/menu/btnimg3.png")
@@ -204,21 +204,21 @@ class menus():
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def menu_educacionSexial_Nina():
+    def menu_educacionSexual_Nina():
         img_result=put_img.put_image_in_any_position(55, 230, menus.img, "recursos/menu/btnintro.png")
         img_result=put_img.put_image_in_any_position(55, 700, img_result, "recursos/menu/ImgMenu1.png")
         img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/volver.png")
         cv2.imshow('image',img_result)
-        cv2.setMouseCallback('image', menus.click_event_menu_educacionSexial_Nina)
+        cv2.setMouseCallback('image', menus.click_event_menu_educacionSexual_Nina)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
     
-    def menu_educacionSexial_Nino():
+    def menu_educacionSexual_Nino():
         img_result=put_img.put_image_in_any_position(55, 230, menus.img, "recursos/menu/btnintro.png")
         img_result=put_img.put_image_in_any_position(55, 700, img_result, "recursos/menu/ImgMenu1.png")
         img_result=put_img.put_image_in_any_position(610, 20, img_result, "recursos/menu/volver.png")
         cv2.imshow('image',img_result)
-        cv2.setMouseCallback('image', menus.click_event_menu_educacionSexial_Nino)
+        cv2.setMouseCallback('image', menus.click_event_menu_educacionSexual_Nino)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

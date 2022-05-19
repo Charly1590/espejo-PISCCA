@@ -6,9 +6,8 @@ from PIL import Image
 from modulos.moduloPosicionarImgs import Posicionamiento as put_img
 import screeninfo
 import random
-import multiprocessing
-from playsound import playsound
 
+from pygame import mixer
 class prevencion_nina():
 
   return_action=False
@@ -34,6 +33,9 @@ class prevencion_nina():
     manodist= -1200
     actividadActual=0
     alerta=False
+
+    t_fin=0
+    narrapaso0=True
 
     #Definicion de Pantalla para Pantalla completa
     screen = screeninfo.get_monitors()[0]
@@ -80,6 +82,11 @@ class prevencion_nina():
     img_return = np.array(Image.open("recursos/autoc/cepilladodientes/volver.png"))
     img_return=cv2.rotate(img_return, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
+
+    #Saludo inicial
+    mixer.music.load('recursos/audios/prevencionAbusoSexual/nadiePuedeTocarTuCuerpo.ogg')
+    mixer.music.play()
+
     with mp_pose.Pose(
       
       #Ajustes de la red neuronal
@@ -91,10 +98,16 @@ class prevencion_nina():
 
       while cap.isOpened():
 
+        t_ini=time.time()
         #Lectura y volteado de imagen
         succes, image = cap.read()
         image=cv2.flip(image, 1)
 
+
+        if  narrapaso0 and t_fin>=2.5:
+          mixer.music.load('recursos/audios/prevencionAbusoSexual/tocaElBotonParaPedirAyuda.ogg')
+          mixer.music.play()
+          narrapaso0=False
 
         #Contador FPS
         #start = time.time()
@@ -378,5 +391,5 @@ class prevencion_nina():
             break
         except Exception as e:
           print(e)
-
+        t_fin+=time.time()-t_ini
     cap.release()

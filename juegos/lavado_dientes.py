@@ -371,9 +371,9 @@ class lavado_dientes():
                 img_result=put_img.put_elements_in_viedo(lhx,lhy,img_result,img_pasta_left)
               
               
-              if pasta_mano_izquierda == 2 and not agarra_pasta:
+              if pasta_mano_izquierda == 2 and not agarra_pasta and t_fin_check>=4.5:
 
-                if poner_pasta and t_fin_check>=4.5:
+                if poner_pasta:
                     mixer.music.load('recursos/audios/lavadoDientes/ponerPastaCepillo.ogg')
                     mixer.music.play()
                     poner_pasta=False

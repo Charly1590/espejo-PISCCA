@@ -33,6 +33,7 @@ class prevencion_nina():
     manodist= -1200
     actividadActual=0
     alerta=False
+    alertaSonido=False
 
     t_fin=0
     narrapaso0=True
@@ -108,6 +109,17 @@ class prevencion_nina():
           mixer.music.load('recursos/audios/prevencionAbusoSexual/tocaElBotonParaPedirAyuda.ogg')
           mixer.music.play()
           narrapaso0=False
+
+        if alertaSonido and t_fin>=10.5:
+          sonidoActual = random.randint(1, 2)
+          if sonidoActual == 1:
+            mixer.music.load('recursos/audios/prevencionAbusoSexual/Alti.ogg')
+            mixer.music.play()
+            alertaSonido=False
+          elif sonidoActual ==2:
+            mixer.music.load('recursos/audios/prevencionAbusoSexual/Detente.ogg')
+            mixer.music.play()
+            alertaSonido=False
 
         #Contador FPS
         #start = time.time()
@@ -349,14 +361,16 @@ class prevencion_nina():
               # thickness = 2
               # img_result = cv2.rectangle(img_result, start_jabon, end_jabon, color, thickness)
 
-              if (xl>=xn and xl<=xnf) and (yl>=yn and yl<=ynf):
+              if (xl>=xn and xl<=xnf) and (yl>=yn and yl<=ynf) and alerta and t_fin>=10.5:  
                 actividadActual = 0
                 manodist= -1200
                 alerta=False
-              if (xr>=xn and xr<=xnf) and (yr>=yn and yr<=ynf):
+                alertaSonido=True
+              if (xr>=xn and xr<=xnf) and (yr>=yn and yr<=ynf)and alerta and t_fin>=10.5:
                 actividadActual = 0
                 manodist= -1200
                 alerta=False
+                alertaSonido=True
 
 
 
@@ -387,6 +401,7 @@ class prevencion_nina():
         #Tecla de salida ESC
         try:
           if return_action or (cv2.waitKey(5) & 0xFF == 27):
+            mixer.stop()
             cv2.destroyWindow('prev_nina')
             break
         except Exception as e:

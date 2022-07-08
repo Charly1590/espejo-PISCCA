@@ -1,0 +1,6 @@
+sudo nano /etc/udev/rules.d/99-calibration.rules
+
+Ponemos esto adentro:
+
+ATTRS{name}=="Multi touch   Multi touch overlay device", ENV{LIBINPUT_CALIBRATION_MATRIX}="0.000000 1.000000 0.000000 -1.000000 0.000000 1.000000 0.000000 0.000000 1.000000"
+
